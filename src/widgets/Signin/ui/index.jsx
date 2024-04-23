@@ -10,40 +10,19 @@ import {
 } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { LogIn } from "react-native-feather";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 export const SigninUI = ({ navigation }) => {
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-  const validate = () => {
-    const errors = {};
-    if (!login) {
-      errors.login = "Login is required";
-    }
-    if (!password) {
-      errors.password = "Password is required";
-    }
-
-    setErrors(errors);
-
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSubmit = async () => {
-    if (validate()) {
-      console.log(
-        {
-          login,
-          password,
-        },
-        "values"
-      );
-      setErrors({});
-      setLogin("");
-      setPassword("");
-    }
+  const handleFinish = (values) => {
+    console.log(values, "values");
+    reset();
   };
 
   return (
@@ -68,28 +47,51 @@ export const SigninUI = ({ navigation }) => {
               <LogIn width={35} height={35} color={"crimson"} />
             </View>
             <Text style={style.label}>Login:</Text>
-            <TextInput
-              value={login}
-              onChangeText={setLogin}
-              style={style.input}
-              placeholder="Enter login or phone number"
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={style.input}
+                  placeholder="Enter login or phone number"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="login"
+              rules={{ required: true, minLength: 3 }}
             />
             {errors.login && (
-              <Text style={{ color: "red" }}>{errors.login}</Text>
+              <Text style={{ color: "red" }}>
+                Login must be filled, min 3 chars
+              </Text>
             )}
             <Text style={style.label}>Password:</Text>
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              style={style.input}
-              placeholder="Enter password"
-              secureTextEntry={true}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={style.input}
+                  placeholder="Enter password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry={true}
+                />
+              )}
+              name="password"
+              rules={{ required: true, minLength: 6, maxLength: 12 }}
             />
             {errors.password && (
-              <Text style={{ color: "red" }}>{errors.password}</Text>
+              <Text style={{ color: "red" }}>
+                Password must be between 6 and 12
+              </Text>
             )}
             <View style={{ marginVertical: 10 }}>
-              <TouchableOpacity style={style.button} onPress={handleSubmit}>
+              <TouchableOpacity
+                style={style.button}
+                onPress={handleSubmit(handleFinish)}
+              >
                 <Text style={{ color: "white" }}>Sign in</Text>
               </TouchableOpacity>
               <Text style={{ marginVertical: 10, textAlign: "center" }}>
