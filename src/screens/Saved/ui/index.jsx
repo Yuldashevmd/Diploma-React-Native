@@ -13,6 +13,8 @@ const cards = [
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
 
     likes: true,
+    salary_from: "15000",
+    salary_type: "sum",
   },
   {
     id: 2,
@@ -21,6 +23,8 @@ const cards = [
     content:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
     likes: true,
+    salary_from: "5000",
+    salary_type: "euro",
   },
 ];
 
@@ -42,6 +46,8 @@ export const SavedScreen = ({ navigation }) => {
               title={item.title}
               subtitle={item.subtitle}
               content={item.content}
+              salary_from={item.salary_from}
+              salary_type={item.salary_type}
               id={item.id}
               likes={item.likes}
               onClick={() => navigation.navigate("SearchScreenItem")}

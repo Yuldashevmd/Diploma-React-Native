@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
-import { Container } from "../../../../shared/styles/global";
 import { Button, Chip, TextInput } from "react-native-paper";
+import { Container } from "../../../../shared/styles/global";
+import { useState } from "react";
 
-export const JobsScreenCrud = ({ navigation, route }) => {
+export const CVScreenCrud = ({ navigation, route }) => {
   const { params } = route;
   const {
     control,
@@ -39,7 +39,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               color: "#252525",
             }}
           >
-            Info:
+            Main info:
           </Text>
           <View style={{ gap: 15 }}>
             <View>
@@ -50,7 +50,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
-                    activeOutlineColor="crimson"
+                    activeOutlineColor="#004C99"
                     mode="outlined"
                     label="Title"
                     value={value}
@@ -71,39 +71,55 @@ export const JobsScreenCrud = ({ navigation, route }) => {
             </View>
             <View>
               <Controller
-                rules={{ required: true, minLength: 15 }}
+                rules={{ required: true, minLength: 5 }}
                 control={control}
-                name="requirements"
+                name="skills"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
-                    activeOutlineColor="crimson"
+                    activeOutlineColor="#004C99"
                     mode="outlined"
                     multiline
-                    label="Requirements"
+                    label="Skills"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
                 )}
               />
-              {errors.requirements && (
+              {errors.skills && (
                 <Text
                   style={{
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 15 characters
+                  field is required and must be at least 5 characters
                 </Text>
               )}
             </View>
+            <Controller
+              control={control}
+              name="jobs"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  outlineColor={"#ccc"}
+                  activeOutlineColor="#004C99"
+                  mode="outlined"
+                  multiline
+                  label="Experience"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+              )}
+            />
             <Controller
               control={control}
               name="salary_from"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
-                  activeOutlineColor="crimson"
+                  activeOutlineColor="#004C99"
                   mode="outlined"
                   multiline
                   label="Salary from"
@@ -156,7 +172,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
-                  activeOutlineColor="crimson"
+                  activeOutlineColor="#004C99"
                   mode="outlined"
                   multiline
                   label="About me"
@@ -172,7 +188,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
         <Button
           onPress={handleSubmit(handleFinish)}
           mode="contained"
-          buttonColor="crimson"
+          buttonColor="#004C99"
           icon={"content-save"}
           style={{
             height: 50,

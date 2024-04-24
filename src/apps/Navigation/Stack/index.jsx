@@ -4,6 +4,8 @@ import { SearchScreenItem } from "../../../screens/SearchScreenItem";
 import { Signin } from "../../../widgets/Signin";
 import { Signup } from "../../../widgets/Signup";
 import { JobsScreenCrud } from "../../../screens/Jobs";
+import { CV } from "../../../screens/CV";
+import { CVScreenCrud } from "../../../screens/CV/ui/CrudScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +18,31 @@ export const StackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="SearchScreenItem" component={SearchScreenItem} />
-      <Stack.Screen name="JobScreenCrud" component={JobsScreenCrud} />
+      <Stack.Screen
+        name="JobScreenCrud"
+        component={JobsScreenCrud}
+        options={{
+          title: "Create or Edit Job",
+          headerStyle: { backgroundColor: "crimson" },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "white",
+        }}
+      />
+      <Stack.Screen name="CV" component={CV} />
+      <Stack.Screen
+        name="CVScreenCrud"
+        component={CVScreenCrud}
+        options={{
+          title: "Create or Edit CV",
+          headerStyle: { backgroundColor: "#004a8d" },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "white",
+        }}
+      />
       {/* AUTH */}
       <Stack.Screen
         name="Signin"

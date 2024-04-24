@@ -3,8 +3,18 @@ import { Heart } from "react-native-feather";
 import { Button, Card } from "react-native-paper";
 
 export const JobItemCard = (props) => {
-  const { title, subtitle, content, onClick, id, likes, rejected, offered } =
-    props;
+  const {
+    title,
+    subtitle,
+    content,
+    salary_from,
+    salary_type,
+    onClick,
+    id,
+    likes,
+    rejected,
+    offered,
+  } = props;
 
   const handleLike = () => {
     console.log("like", id);
@@ -13,9 +23,9 @@ export const JobItemCard = (props) => {
   return (
     <Card style={{ marginVertical: 10, backgroundColor: "white" }}>
       <Card.Title
-        titleVariant="titleLarge"
         subtitleVariant="titleSmall"
         title={title}
+        titleStyle={{ fontSize: 18, fontWeight: "700", color: "#252525" }}
         subtitle={subtitle}
         subtitleStyle={{ fontWeight: 400, color: "grey" }}
         rightStyle={{ marginRight: 10 }}
@@ -31,7 +41,39 @@ export const JobItemCard = (props) => {
         )}
       />
       <Card.Content>
-        <Text>
+        <Text
+          style={{
+            fontSize: 15,
+            fontWeight: "600",
+            borderColor: "lightgrey",
+            borderTopWidth: 1,
+            paddingTop: 5,
+          }}
+        >
+          Salary:{" "}
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: "green",
+              fontSize: 18,
+              letterSpacing: 1,
+            }}
+          >
+            {salary_from}
+          </Text>{" "}
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: "green",
+              fontSize: 18,
+            }}
+          >
+            {(salary_type === "sum" && "UZS") ||
+              (salary_type === "dollar" && "USD") ||
+              (salary_type === "euro" && "EUR")}
+          </Text>
+        </Text>
+        <Text style={{ color: "grey", marginTop: 5 }}>
           {content.length > 150 ? content.slice(0, 150) + "..." : content}
         </Text>
       </Card.Content>
