@@ -1,6 +1,7 @@
 import { Text } from "react-native";
 import { Heart } from "react-native-feather";
 import { Button, Card } from "react-native-paper";
+import { SalaryText } from "../../../entities/SalaryText";
 
 export const JobItemCard = (props) => {
   const {
@@ -41,38 +42,7 @@ export const JobItemCard = (props) => {
         )}
       />
       <Card.Content>
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: "600",
-            borderColor: "lightgrey",
-            borderTopWidth: 1,
-            paddingTop: 5,
-          }}
-        >
-          Salary:{" "}
-          <Text
-            style={{
-              fontWeight: "bold",
-              color: "green",
-              fontSize: 18,
-              letterSpacing: 1,
-            }}
-          >
-            {salary_from}
-          </Text>{" "}
-          <Text
-            style={{
-              fontWeight: "bold",
-              color: "green",
-              fontSize: 18,
-            }}
-          >
-            {(salary_type === "sum" && "UZS") ||
-              (salary_type === "dollar" && "USD") ||
-              (salary_type === "euro" && "EUR")}
-          </Text>
-        </Text>
+        <SalaryText salary={salary_from} salary_type={salary_type} />
         <Text style={{ color: "grey", marginTop: 5 }}>
           {content.length > 150 ? content.slice(0, 150) + "..." : content}
         </Text>

@@ -1,5 +1,12 @@
 import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { Button, Chip, TextInput } from "react-native-paper";
 import { Container } from "../../../../shared/styles/global";
 import { useState } from "react";
@@ -25,7 +32,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
     <Container>
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
         style={{ flex: 1, height: "100%" }}
       >
         <ScrollView
@@ -123,6 +130,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                   mode="outlined"
                   multiline
                   label="Salary from"
+                  keyboardType="numeric"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -185,23 +193,25 @@ export const CVScreenCrud = ({ navigation, route }) => {
             />
           </View>
         </ScrollView>
-        <Button
-          onPress={handleSubmit(handleFinish)}
-          mode="contained"
-          buttonColor="#004C99"
-          icon={"content-save"}
-          style={{
-            height: 50,
-            marginTop: 10,
-            width: "100%",
-            borderRadius: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          Save
-        </Button>
+        <SafeAreaView>
+          <Button
+            onPress={handleSubmit(handleFinish)}
+            mode="contained"
+            buttonColor="#004C99"
+            icon={"content-save"}
+            style={{
+              height: 50,
+              marginBottom: 10,
+              width: "100%",
+              borderRadius: 8,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            Save
+          </Button>
+        </SafeAreaView>
       </KeyboardAvoidingView>
     </Container>
   );

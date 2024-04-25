@@ -6,6 +6,7 @@ import { Signup } from "../../../widgets/Signup";
 import { JobsScreenCrud } from "../../../screens/Jobs";
 import { CV } from "../../../screens/CV";
 import { CVScreenCrud } from "../../../screens/CV/ui/CrudScreen";
+import { SettingScreen } from "../../../screens/Setting";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,8 @@ export const StackNavigator = () => {
           headerTintColor: "white",
         }}
       />
+      <Stack.Screen name="Settings" component={SettingScreen} />
+
       {/* AUTH */}
       <Stack.Screen
         name="Signin"

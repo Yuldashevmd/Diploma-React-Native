@@ -1,10 +1,11 @@
-import { Alert, FlatList } from "react-native";
+import { Alert, FlatList, SafeAreaView } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { FAB } from "react-native-paper";
 import { Plus } from "react-native-feather";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { CvCard } from "../../../shared/ui/CvCard";
+import { useState } from "react";
 
 const cards = [
   {
@@ -27,6 +28,14 @@ const cards = [
   },
 ];
 export const CV = ({ navigation }) => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
   // DELETE
   const handleDelete = async (id) => {
     Alert.alert(
@@ -68,16 +77,21 @@ export const CV = ({ navigation }) => {
         )}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<ListEmpty />}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
-      <FAB
-        style={{
-          backgroundColor: "#004C99",
-        }}
-        color="#fff"
-        label="Create"
-        icon={() => <Plus width={20} height={20} color={"white"} />}
-        onPress={() => navigation.navigate("CVScreenCrud")}
-      />
+      <SafeAreaView>
+        <FAB
+          style={{
+            backgroundColor: "#004C99",
+            marginBottom: 10,
+          }}
+          color="#fff"
+          label="Create"
+          icon={() => <Plus width={20} height={20} color={"white"} />}
+          onPress={() => navigation.navigate("CVScreenCrud")}
+        />
+      </SafeAreaView>
     </Container>
   );
 };

@@ -1,0 +1,1 @@
+export { SalaryText } from "./ui";

@@ -31,6 +31,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
         <ScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
+          style={{ marginBottom: 20 }}
         >
           <Text
             style={{
@@ -107,6 +108,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   mode="outlined"
                   multiline
                   label="Salary from"
+                  keyboardType="numeric"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -150,6 +152,86 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                 Dollar
               </Chip>
             </View>
+            <View
+              aria-label="contacts"
+              style={{
+                gap: 15,
+                marginTop: 10,
+                borderTopWidth: 1,
+                borderTopColor: "#ccc",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "500",
+                  fontSize: 20,
+                  color: "#252525",
+                }}
+              >
+                Contacts:
+              </Text>
+              <Controller
+                control={control}
+                name="address"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    label="Address"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="phone"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    keyboardType="phone-pad"
+                    label="Phone"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    label="Email"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="telegram"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    label="Telegram"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+            </View>
             <Controller
               control={control}
               name="about"
@@ -158,10 +240,10 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   outlineColor={"#ccc"}
                   activeOutlineColor="crimson"
                   mode="outlined"
-                  multiline
                   label="About me"
-                  numberOfLines={10}
                   value={value}
+                  multiline
+                  numberOfLines={10}
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
@@ -176,7 +258,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
           icon={"content-save"}
           style={{
             height: 50,
-            marginTop: 10,
+            marginBottom: 10,
             width: "100%",
             borderRadius: 8,
             display: "flex",

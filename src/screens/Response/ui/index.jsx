@@ -48,6 +48,8 @@ const cards = [
       "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga fga uygayg awygauywg fyuag yag yuagw yfgawfauysg",
     rejected: true,
     offered: false,
+    salary_type: "euro",
+    salary_from: "850",
   },
   {
     id: 2,
@@ -55,7 +57,47 @@ const cards = [
     subtitle: "10.02.2024",
     likes: false,
     offered: true,
+
+    salary_type: "sum",
+    salary_from: "15000",
     rejected: false,
+    content:
+      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
+  },
+  {
+    id: 3,
+    title: "Front-end developer",
+    subtitle: "10.02.2024",
+    likes: false,
+    offered: false,
+    salary_type: "dollar",
+    salary_from: "500",
+    rejected: true,
+    content:
+      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
+  },
+  {
+    id: 4,
+    title: "Front-end developer",
+    subtitle: "10.02.2024",
+    likes: false,
+    offered: true,
+
+    salary_type: "sum",
+    salary_from: "1500",
+    rejected: false,
+    content:
+      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
+  },
+  {
+    id: 5,
+    title: "Front-end developer",
+    subtitle: "10.02.2024",
+    likes: false,
+    offered: false,
+    salary_type: "dollar",
+    salary_from: "1500",
+    rejected: true,
     content:
       "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
   },
@@ -63,6 +105,14 @@ const cards = [
 export const ResponseScreen = ({ navigation }) => {
   const [value, setValue] = useState("all");
   const [data, setData] = useState(cards);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   // WATCH-INPUT-CHANGE-AND-FETCH
   useEffect(() => {
@@ -88,27 +138,32 @@ export const ResponseScreen = ({ navigation }) => {
             buttons={buttons}
           />
         </View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          marginBottom={70}
-          data={data}
-          renderItem={({ item }) => (
-            <JobItemCard
-              title={item.title}
-              subtitle={item.subtitle}
-              content={item.content}
-              id={item.id}
-              likes={item.likes}
-              rejected={item.rejected}
-              offered={item.offered}
-              onClick={() => navigation.navigate("SearchScreenItem")}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={<ListEmpty />}
-        />
       </SafeAreaView>
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        data={data}
+        renderItem={({ item }) => (
+          <JobItemCard
+            title={item.title}
+            subtitle={item.subtitle}
+            content={item.content}
+            salary_from={item.salary_from}
+            salary_type={item.salary_type}
+            id={item.id}
+            likes={item.likes}
+            rejected={item.rejected}
+            offered={item.offered}
+            onClick={() =>
+              navigation.navigate("SearchScreenItem", { id: item.id })
+            }
+          />
+        )}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={<ListEmpty />}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+      />
     </Container>
   );
 };

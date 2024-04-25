@@ -3,9 +3,8 @@ import { Container } from "../../../shared/styles/global";
 import { JobItemCard } from "../../../shared/ui/JobItemCard";
 import { SearchScreenFilter } from "./Filter";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
-import { Button, Chip } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { useState } from "react";
-import { Check } from "react-native-feather";
 
 const cards = [
   {
@@ -54,16 +53,24 @@ const cards = [
 
 export const SearchScreen = ({ navigation }) => {
   const [sort, setSort] = useState("all");
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   return (
     <Container>
       <SafeAreaView>
         <SearchScreenFilter />
-        <View style={{ flexDirection: "row", gap: 10, marginBottom: 5 }}>
+        <View style={{ flexDirection: "row", gap: 10, marginVertical: 5 }}>
           <Button
             mode="contained"
-            buttonColor="#A9C4EB"
-            textColor="#004C99"
+            buttonColor="#D5E8D4"
+            textColor="green"
             style={{ borderRadius: 8 }}
             onPress={() => setSort("all")}
             icon={sort === "all" ? "check" : null}
@@ -72,8 +79,8 @@ export const SearchScreen = ({ navigation }) => {
           </Button>
           <Button
             mode="contained"
-            buttonColor="#FFCE9F"
-            textColor="crimson"
+            buttonColor="#FFE6CC"
+            textColor="#FF8000"
             style={{ borderRadius: 8 }}
             onPress={() => setSort("popular")}
             icon={sort === "popular" ? "check" : null}
@@ -81,28 +88,31 @@ export const SearchScreen = ({ navigation }) => {
             Popular
           </Button>
         </View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          marginBottom={70}
-          data={cards}
-          renderItem={({ item }) => (
-            <JobItemCard
-              key={item.id}
-              title={item.title}
-              subtitle={item.subtitle}
-              content={item.content}
-              salary_from={item.salary_from}
-              salary_type={item.salary_type}
-              id={item.id}
-              likes={item.likes}
-              onClick={() => navigation.navigate("SearchScreenItem")}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={<ListEmpty />}
-        />
       </SafeAreaView>
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        data={cards}
+        renderItem={({ item }) => (
+          <JobItemCard
+            key={item.id}
+            title={item.title}
+            subtitle={item.subtitle}
+            content={item.content}
+            salary_from={item.salary_from}
+            salary_type={item.salary_type}
+            id={item.id}
+            likes={item.likes}
+            onClick={() =>
+              navigation.navigate("SearchScreenItem", { id: item.id })
+            }
+          />
+        )}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={<ListEmpty />}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+      />
     </Container>
   );
 };

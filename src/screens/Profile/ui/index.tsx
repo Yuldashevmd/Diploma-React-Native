@@ -2,6 +2,7 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { Avatar, Button, Card, Divider, FAB, List } from "react-native-paper";
 import { LogOut } from "react-native-feather";
+import { MyJobCard } from "../../../shared/ui/MyJobCard";
 
 export const ProfileScreen = ({ navigation }) => {
   // LOG-OUT
@@ -36,6 +37,9 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 14, color: "grey" }}>
               Front-end developer
             </Text>
+            <Text style={{ fontSize: 14, color: "grey" }}>
+              extremeJs@gmail.com
+            </Text>
           </View>
         </View>
         <ScrollView
@@ -67,7 +71,17 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
               Jobs:
             </Text>
-            <Card style={{ marginVertical: 10, backgroundColor: "white" }}>
+            <MyJobCard
+              title="Front-end developer"
+              subtitle="10.02.2024"
+              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
+              salary_from={500}
+              salary_type="sum"
+              // onDelete={() => {}}
+              // onEdit={() => {}}
+              likes
+            />
+            {/* <Card style={{ marginVertical: 10, backgroundColor: "white" }}>
               <Card.Title
                 title="Front-end developer"
                 titleStyle={{ fontWeight: "500", fontSize: 18 }}
@@ -80,7 +94,7 @@ export const ProfileScreen = ({ navigation }) => {
                   do eiusmod tempor incididunt ut labore et dolore magna
                 </Text>
               </Card.Content>
-            </Card>
+            </Card> */}
             <Button onPress={() => navigation.navigate("Jobs")}>
               Show all
             </Button>
@@ -103,7 +117,7 @@ export const ProfileScreen = ({ navigation }) => {
               <List.Item
                 title="Setting"
                 left={(props) => <List.Icon {...props} icon="cog" />}
-                onPress={() => console.log("setting clicked")}
+                onPress={() => navigation.navigate("Settings")}
               />
               <List.Item
                 title="About"
@@ -115,15 +129,17 @@ export const ProfileScreen = ({ navigation }) => {
                 left={(props) => <List.Icon {...props} icon={"help"} />}
                 onPress={() => console.log("setting clicked")}
               />
+              <List.Item
+                title="Exit"
+                titleStyle={{ color: "red" }}
+                left={(props) => (
+                  <List.Icon {...props} icon={"logout"} color="red" />
+                )}
+                onPress={() => console.log("setting clicked")}
+              />
             </List.Section>
           </View>
         </ScrollView>
-        <FAB
-          color="crimson"
-          icon={() => <LogOut color="crimson" width={24} height={24} />}
-          label="Logout"
-          onPress={handleLogout}
-        />
       </SafeAreaView>
     </Container>
   );

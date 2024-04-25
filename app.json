@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "hh.uz",
-    "slug": "hh.uz",
+    "slug": "work-up",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yuldashev_md.workup"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9f71f1b8-895b-4e6b-9bbc-aa10a746550e"
+      }
+    },
+    "owner": "yuldashev_md"
   }
 }
