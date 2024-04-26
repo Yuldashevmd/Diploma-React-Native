@@ -46,12 +46,9 @@ export const SearchScreenFilterModal = (props) => {
           aria-label="modal-header"
           aria-hidden={open}
           visible={open}
-          collapsable
           animationType="slide"
           presentationStyle="pageSheet"
-          supportedOrientations={["portrait", "landscape"]}
           onRequestClose={close}
-          onDismiss={() => close()}
         >
           <StatusBar barStyle="dark-content" />
           <SafeAreaView>

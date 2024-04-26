@@ -52,28 +52,32 @@ export const CvCard = (props) => {
           width: "100%",
         }}
       >
-        <Button
-          onPress={onEdit}
-          style={{ flex: 1, borderRadius: 8, width: "100%" }}
-          mode="default"
-          textColor="#CC6600"
-          icon={() => <PenTool width={20} height={20} color={"#CC6600"} />}
-        >
-          Edit
-        </Button>
-        <Button
-          onPress={onDelete}
-          style={{
-            flex: 1,
-            borderRadius: 8,
-            width: "100%",
-          }}
-          textColor="crimson"
-          mode="default"
-          icon={() => <Trash width={20} height={20} color={"crimson"} />}
-        >
-          Delete
-        </Button>
+        {onEdit && (
+          <Button
+            onPress={onEdit}
+            style={{ flex: 1, borderRadius: 8, width: "100%" }}
+            mode="default"
+            textColor="#CC6600"
+            icon={() => <PenTool width={20} height={20} color={"#CC6600"} />}
+          >
+            Edit
+          </Button>
+        )}
+        {onDelete && (
+          <Button
+            onPress={onDelete}
+            style={{
+              flex: 1,
+              borderRadius: 8,
+              width: "100%",
+            }}
+            textColor="crimson"
+            mode="default"
+            icon={() => <Trash width={20} height={20} color={"crimson"} />}
+          >
+            Delete
+          </Button>
+        )}
       </Card.Actions>
     </Card>
   );

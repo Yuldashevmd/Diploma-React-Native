@@ -40,6 +40,7 @@ export const SearchScreenFilter = () => {
             onIconPress={handleFinish}
             onKeyPress={(e) => e.key === "Enter" && handleFinish()}
             onChangeText={setSearchValue}
+            onSubmitEditing={handleFinish}
             value={searchValue}
             style={{
               flex: 6,

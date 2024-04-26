@@ -1,19 +1,31 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { useEffect } from "react";
 import { Heart, Mail, Phone, Send } from "react-native-feather";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { SalaryText } from "../../../entities/SalaryText";
-import { Button } from "react-native-paper";
+import { ActivityIndicator, Button } from "react-native-paper";
+import { useUser } from "../../../shared/hooks/useUser";
 
 export const SearchScreenItem = ({ navigation, route }) => {
   const { id } = route.params;
+  const { data, pending } = useUser();
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <Heart width={24} height={24} color="crimson" />,
+      title: "Front-end developer " + id,
     });
   }, []);
+
+  if (pending)
+    return (
+      <ActivityIndicator
+        animating={pending}
+        color="crimson"
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      />
+    );
 
   return (
     <Container
@@ -87,7 +99,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
         <View aria-label="address" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Address:</Text>
           <Text style={style.text}>
-            7, Yakkasaray district, Tashkent, Uzbekistan
+            {data?.address.city}, {data?.address.street}, {data?.address.suite}
           </Text>
         </View>
         <View aria-label="contacts" style={{ marginVertical: 10, gap: 5 }}>
@@ -100,7 +112,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Phone width={20} height={20} color="#252525" />
-            <Text style={style.text}>Phone: +998 99 999 99 99</Text>
+            <Text style={style.text}>Phone: {data?.phone}</Text>
           </View>
           <View
             style={{
@@ -110,7 +122,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Mail width={20} height={20} color="#252525" />
-            <Text style={style.text}>Email: JkS6m@example.com</Text>
+            <Text style={style.text}>Email: {data?.email}</Text>
           </View>
           <View
             style={{
@@ -126,6 +138,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
       </ScrollView>
       <View
         style={{
+          width: "100%",
           borderTopWidth: 1,
           borderTopColor: "lightgrey",
           paddingTop: 10,
@@ -134,19 +147,18 @@ export const SearchScreenItem = ({ navigation, route }) => {
         <Button
           onPress={() => console.log("clicked")}
           mode="contained"
-          buttonColor="crimson"
-          icon={"content-save"}
+          buttonColor="green"
+          icon={"send"}
           style={{
             height: 50,
             marginBottom: 10,
-            width: "100%",
             borderRadius: 8,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          Save
+          Response
         </Button>
       </View>
     </Container>

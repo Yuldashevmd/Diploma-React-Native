@@ -1,14 +1,33 @@
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
-import { Avatar, Button, Card, Divider, FAB, List } from "react-native-paper";
-import { LogOut } from "react-native-feather";
+import {
+  ActivityIndicator,
+  Avatar,
+  Button,
+  Divider,
+  List,
+} from "react-native-paper";
 import { MyJobCard } from "../../../shared/ui/MyJobCard";
+import { useUser } from "../../../shared/hooks/useUser";
+import { RefreshCcw } from "react-native-feather";
+import { CvCard } from "../../../shared/ui/CvCard";
 
 export const ProfileScreen = ({ navigation }) => {
+  const { data, pending, refetch } = useUser();
+
   // LOG-OUT
   const handleLogout = () => {
     console.log("logged out");
   };
+
+  if (pending)
+    return (
+      <ActivityIndicator
+        animating={pending}
+        color="crimson"
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      />
+    );
 
   return (
     <Container>
@@ -33,14 +52,22 @@ export const ProfileScreen = ({ navigation }) => {
             aria-label="User"
           />
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20 }}>Alimov Alim Alimovich</Text>
+            <Text style={{ fontSize: 20 }}>{data?.name}</Text>
             <Text style={{ fontSize: 14, color: "grey" }}>
               Front-end developer
             </Text>
-            <Text style={{ fontSize: 14, color: "grey" }}>
-              extremeJs@gmail.com
-            </Text>
+            <Text style={{ fontSize: 14, color: "grey" }}>{data?.email}</Text>
           </View>
+        </View>
+        <View>
+          <RefreshCcw
+            disabled={pending}
+            onPress={() => refetch()}
+            width={24}
+            height={24}
+            color={"grey"}
+            style={{ flex: 1, alignSelf: "flex-end" }}
+          />
         </View>
         <ScrollView
           showsHorizontalScrollIndicator={false}
@@ -50,20 +77,13 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
               Resumes:
             </Text>
-            <Card style={{ marginVertical: 10, backgroundColor: "white" }}>
-              <Card.Title
-                title="Alimov Alim Alimovich"
-                subtitle="Front-end developer"
-                subtitleStyle={{ fontSize: 13, color: "grey" }}
-                left={(props) => <Avatar.Icon {...props} icon="account" />}
-              />
-              <Card.Content>
-                <Text style={{ color: "grey" }}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna
-                </Text>
-              </Card.Content>
-            </Card>
+            <CvCard
+              title="Alimov Alim Alimovich"
+              subtitle="Front-end developer"
+              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
+              skills={"HTML,CSS,JS,REACT-JS,VUE-JS,NEXT-JS,NODE-JS,PHP,LARAVEL"}
+              jobs="Google, Facebook, Meta"
+            />
             <Button onPress={() => navigation.navigate("CV")}>Show all</Button>
           </View>
           <Divider />
@@ -77,24 +97,8 @@ export const ProfileScreen = ({ navigation }) => {
               content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
               salary_from={500}
               salary_type="sum"
-              // onDelete={() => {}}
-              // onEdit={() => {}}
               likes
             />
-            {/* <Card style={{ marginVertical: 10, backgroundColor: "white" }}>
-              <Card.Title
-                title="Front-end developer"
-                titleStyle={{ fontWeight: "500", fontSize: 18 }}
-                subtitle="10.02.2024"
-                subtitleStyle={{ fontSize: 13, color: "grey" }}
-              />
-              <Card.Content>
-                <Text style={{ color: "grey" }}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna
-                </Text>
-              </Card.Content>
-            </Card> */}
             <Button onPress={() => navigation.navigate("Jobs")}>
               Show all
             </Button>
@@ -135,7 +139,7 @@ export const ProfileScreen = ({ navigation }) => {
                 left={(props) => (
                   <List.Icon {...props} icon={"logout"} color="red" />
                 )}
-                onPress={() => console.log("setting clicked")}
+                onPress={handleLogout}
               />
             </List.Section>
           </View>
