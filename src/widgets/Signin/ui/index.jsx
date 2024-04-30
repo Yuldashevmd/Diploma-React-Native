@@ -5,12 +5,13 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { LogIn } from "react-native-feather";
 import { Controller, useForm } from "react-hook-form";
+import { Button } from "react-native-paper";
+import { useUserToken } from "../model/hook";
 
 export const SigninUI = ({ navigation }) => {
   const {
@@ -19,9 +20,19 @@ export const SigninUI = ({ navigation }) => {
     formState: { errors },
     reset,
   } = useForm();
+  const { token, signIn, pending } = useUserToken();
 
-  const handleFinish = (values) => {
-    console.log(values, "values");
+  const handleFinish = async (values) => {
+    const body = {
+      name: values.login,
+      password: values.password,
+    };
+    await signIn(body);
+    if (token) {
+      setTimeout(() => {
+        navigation.navigate("Search");
+      }, 1000);
+    }
     reset();
   };
 
@@ -80,20 +91,23 @@ export const SigninUI = ({ navigation }) => {
                 />
               )}
               name="password"
-              rules={{ required: true, minLength: 6, maxLength: 12 }}
+              rules={{ required: true, minLength: 3, maxLength: 12 }}
             />
             {errors.password && (
               <Text style={{ color: "red" }}>
-                Password must be between 6 and 12
+                Password must be between 3 and 12
               </Text>
             )}
             <View style={{ marginVertical: 10 }}>
-              <TouchableOpacity
-                style={style.button}
+              <Button
+                loading={pending}
+                textColor="#fff"
+                buttonColor="crimson"
+                style={{ borderRadius: 8 }}
                 onPress={handleSubmit(handleFinish)}
               >
                 <Text style={{ color: "white" }}>Sign in</Text>
-              </TouchableOpacity>
+              </Button>
               <Text style={{ marginVertical: 10, textAlign: "center" }}>
                 Don't have an account?
                 <Text

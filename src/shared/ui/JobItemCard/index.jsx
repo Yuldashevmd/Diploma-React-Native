@@ -27,7 +27,7 @@ export const JobItemCard = (props) => {
         subtitleVariant="titleSmall"
         title={title}
         titleStyle={{ fontSize: 18, fontWeight: "700", color: "#252525" }}
-        subtitle={subtitle}
+        subtitle={Intl.DateTimeFormat("en-GB").format(new Date(subtitle))}
         subtitleStyle={{ fontWeight: 400, color: "grey" }}
         rightStyle={{ marginRight: 10 }}
         right={(props) => (

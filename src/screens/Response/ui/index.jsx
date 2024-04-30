@@ -146,7 +146,7 @@ export const ResponseScreen = ({ navigation }) => {
         renderItem={({ item }) => (
           <JobItemCard
             title={item.title}
-            subtitle={item.subtitle}
+            subtitle={Date.now()}
             content={item.content}
             salary_from={item.salary_from}
             salary_type={item.salary_type}

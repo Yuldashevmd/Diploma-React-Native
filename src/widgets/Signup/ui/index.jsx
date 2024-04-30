@@ -5,12 +5,14 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { User } from "react-native-feather";
 import { Controller, useForm } from "react-hook-form";
+import { SignupApi } from "../api";
+import { useState } from "react";
+import { Button } from "react-native-paper";
 
 export const SignupUI = ({ navigation }) => {
   const {
@@ -19,10 +21,27 @@ export const SignupUI = ({ navigation }) => {
     formState: { errors },
     reset,
   } = useForm();
+  const [resMessage, setResMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleFinish = (values) => {
-    console.log(values, "values");
-    reset();
+  const handleFinish = async (values) => {
+    setLoading(true);
+    const body = {
+      name: values.login,
+      password: values.password,
+    };
+    const res = await SignupApi(body);
+    if (res.token) {
+      setTimeout(() => {
+        navigation.navigate("Signin");
+      }, 1000);
+
+      setResMessage("Successfully created");
+      setLoading(false);
+    } else {
+      setResMessage(res.message || res.response), reset();
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,6 +66,11 @@ export const SignupUI = ({ navigation }) => {
 
               <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign up</Text>
             </View>
+            {resMessage && (
+              <Text style={{ color: "crimson", textAlign: "center" }}>
+                {resMessage}
+              </Text>
+            )}
             <Text style={style.label}>Login:</Text>
             <Controller
               control={control}
@@ -89,12 +113,15 @@ export const SignupUI = ({ navigation }) => {
               </Text>
             )}
             <View style={{ marginVertical: 10 }}>
-              <TouchableOpacity
-                style={style.button}
+              <Button
+                textColor="#fff"
+                loading={loading}
+                buttonColor="crimson"
+                style={{ borderRadius: 8 }}
                 onPress={handleSubmit(handleFinish)}
               >
                 <Text style={{ color: "white" }}>Sign up</Text>
-              </TouchableOpacity>
+              </Button>
               <Text style={{ marginVertical: 10, textAlign: "center" }}>
                 Already have an account?
                 <Text
@@ -144,13 +171,5 @@ const style = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "bold",
-  },
-  button: {
-    backgroundColor: "#db332c",
-    padding: 10,
-    borderRadius: 4,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
   },
 });

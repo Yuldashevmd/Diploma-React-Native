@@ -1,22 +1,32 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { useEffect } from "react";
 import { Heart, Mail, Phone, Send } from "react-native-feather";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { SalaryText } from "../../../entities/SalaryText";
 import { ActivityIndicator, Button } from "react-native-paper";
-import { useUser } from "../../../shared/hooks/useUser";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSearchItem } from "../model/hook";
 
 export const SearchScreenItem = ({ navigation, route }) => {
   const { id } = route.params;
-  const { data, pending } = useUser();
+  const { searchItem, pending, getSearchItem } = useSearchItem(id);
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <Heart width={24} height={24} color="crimson" />,
-      title: "Front-end developer " + id,
+      title: "Front-end developer ",
     });
   }, []);
+
+  console.log(searchItem, "searchItem");
+
+  const handleSendResponse = async () => {
+    const token = await AsyncStorage.getItem("access_token");
+    if (token === null) {
+      navigation.navigate("Signin");
+    }
+  };
 
   if (pending)
     return (
@@ -41,7 +51,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
       >
         <HeaderTextScreen
-          title={"Front-end developer " + id}
+          title={searchItem?.title}
           subtitle={"Date:10.02.2024"}
         />
         <SalaryText salary={"500"} salary_type={"sum"} />
@@ -98,9 +108,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
         </View>
         <View aria-label="address" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Address:</Text>
-          <Text style={style.text}>
-            {data?.address.city}, {data?.address.street}, {data?.address.suite}
-          </Text>
+          <Text style={style.text}>{searchItem?.address}</Text>
         </View>
         <View aria-label="contacts" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={style.title}>Contacts:</Text>
@@ -112,7 +120,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Phone width={20} height={20} color="#252525" />
-            <Text style={style.text}>Phone: {data?.phone}</Text>
+            <Text style={style.text}>Phone: {searchItem?.phone}</Text>
           </View>
           <View
             style={{
@@ -122,7 +130,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Mail width={20} height={20} color="#252525" />
-            <Text style={style.text}>Email: {data?.email}</Text>
+            <Text style={style.text}>Email: {searchItem?.email}</Text>
           </View>
           <View
             style={{
@@ -132,7 +140,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Send width={20} height={20} color="#252525" />
-            <Text style={style.text}>Telegram: @username</Text>
+            <Text style={style.text}>Telegram: {searchItem?.telegram}</Text>
           </View>
         </View>
       </ScrollView>
@@ -145,7 +153,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
         }}
       >
         <Button
-          onPress={() => console.log("clicked")}
+          onPress={handleSendResponse}
           mode="contained"
           buttonColor="green"
           icon={"send"}

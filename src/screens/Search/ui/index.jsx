@@ -5,62 +5,18 @@ import { SearchScreenFilter } from "./Filter";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { Button } from "react-native-paper";
 import { useState } from "react";
-
-const cards = [
-  {
-    id: 1,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-
-    salary_from: "5000",
-    salary_type: "sum",
-    likes: true,
-  },
-  {
-    id: 2,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-
-    salary_from: "5000",
-    salary_type: "euro",
-    likes: false,
-  },
-  {
-    id: 3,
-    title: "Mobile developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    salary_from: "5000",
-    salary_type: "dollar",
-    likes: true,
-  },
-  {
-    id: 5,
-    title: "Software engineer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    salary_from: "5000",
-    salary_type: "sum",
-    likes: true,
-  },
-];
+import { useSearch } from "./model/hook";
+import { LoadingUI } from "../../../shared/ui/LoadingUi";
 
 export const SearchScreen = ({ navigation }) => {
   const [sort, setSort] = useState("all");
-  const [refreshing, setRefreshing] = useState(false);
+  const { getSearchData, searchData, pending } = useSearch();
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  const handleRefresh = async () => {
+    await getSearchData();
   };
+
+  if (pending) return <LoadingUI />;
 
   return (
     <Container>
@@ -92,17 +48,17 @@ export const SearchScreen = ({ navigation }) => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={cards}
+        data={searchData}
         renderItem={({ item }) => (
           <JobItemCard
             key={item.id}
             title={item.title}
-            subtitle={item.subtitle}
-            content={item.content}
-            salary_from={item.salary_from}
-            salary_type={item.salary_type}
+            subtitle={item.create_data}
+            content={item.about}
+            salary_from={item.salery_from}
+            salary_type={item.currency}
             id={item.id}
-            likes={item.likes}
+            likes={item?.likes}
             onClick={() =>
               navigation.navigate("SearchScreenItem", { id: item.id })
             }
@@ -110,7 +66,7 @@ export const SearchScreen = ({ navigation }) => {
         )}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<ListEmpty />}
-        refreshing={refreshing}
+        refreshing={pending}
         onRefresh={handleRefresh}
       />
     </Container>
