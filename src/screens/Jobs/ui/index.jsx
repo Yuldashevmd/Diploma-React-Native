@@ -6,74 +6,31 @@ import { MyJobCard } from "../../../shared/ui/MyJobCard";
 import { FAB } from "react-native-paper";
 import { Plus } from "react-native-feather";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
-
-const cards = [
-  {
-    id: 1,
-    title: "Front-end developer",
-    salary_type: "euro",
-    salary_from: "1380",
-    subtitle: "10.02.2024",
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga fga uygayg awygauywg fyuag yag yuagw yfgawfauysg",
-  },
-  {
-    id: 2,
-    title: "Back-end developer",
-    salary_type: "dollar",
-    salary_from: "1500",
-    subtitle: "10.02.2024",
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga ",
-  },
-  {
-    id: 3,
-    title: "Front-end developer",
-    salary_type: "sum",
-    salary_from: "11200",
-    subtitle: "10.02.2024",
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga fga uygayg awygauywg fyuag yag yuagw yfgawfauysg",
-  },
-  {
-    id: 4,
-    title: "Back-end developer",
-    salary_type: "dollar",
-    salary_from: "500",
-    subtitle: "10.02.2024",
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga ",
-  },
-  {
-    id: 5,
-    title: "Front-end developer",
-    salary_type: "sum",
-    salary_from: "6000",
-    subtitle: "10.02.2024",
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga fga uygayg awygauywg fyuag yag yuagw yfgawfauysg",
-  },
-  {
-    id: 6,
-    title: "Back-end developer",
-    salary_type: "euro",
-    salary_from: "25000",
-    subtitle: "10.02.2024",
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga ",
-  },
-];
+import { useJobs } from "../model/hook";
+import { deleteJob, getData } from "../api";
+import { useEffect } from "react";
 
 export const JobsScreen = ({ navigation }) => {
-  const [refreshing, setRefreshing] = useState(false);
+  const { data, pending, pagination, setPagination, setData, setPending } =
+    useJobs();
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  // GET
+  const GET = async () => {
+    setPending(true);
+    const res = await getData(pagination);
+    if (res.results) {
+      setData(res.results);
+    }
+
+    if (res?.status === 401) {
+      navigation.navigate("Signin");
+    }
+    setPending(false);
   };
+
+  useEffect(() => {
+    GET();
+  }, [pagination]);
   // DELETE
   const handleDelete = async (id) => {
     Alert.alert(
@@ -87,7 +44,10 @@ export const JobsScreen = ({ navigation }) => {
         },
         {
           text: "OK",
-          onPress: () => console.log("OK Pressed", id),
+          onPress: async () => {
+            const res = await deleteJob(id);
+            res.status === 204 && GET();
+          },
         },
       ],
       { cancelable: true }
@@ -105,14 +65,16 @@ export const JobsScreen = ({ navigation }) => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={cards}
+        data={data}
         renderItem={({ item }) => (
           <MyJobCard
             title={item.title}
-            subtitle={item.subtitle}
-            content={item.content}
-            salary_from={item.salary_from}
-            salary_type={item.salary_type}
+            subtitle={Intl.DateTimeFormat("ru").format(
+              new Date(item.create_data) || Date.now()
+            )}
+            content={item.about}
+            salary_from={item.salery_from}
+            salary_type={item.currency}
             id={item.id}
             onEdit={() => navigation.navigate("JobScreenCrud", { id: item.id })}
             onDelete={() => handleDelete(item.id)}
@@ -120,8 +82,14 @@ export const JobsScreen = ({ navigation }) => {
         )}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<ListEmpty />}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
+        refreshing={pending}
+        onRefresh={GET}
+        onEndReached={() =>
+          setPagination({
+            ...pagination,
+            pageSize: Number(pagination.pageSize) + 10,
+          })
+        }
       />
       <FAB
         style={{

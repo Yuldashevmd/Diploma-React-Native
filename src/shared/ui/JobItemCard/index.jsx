@@ -15,11 +15,8 @@ export const JobItemCard = (props) => {
     likes,
     rejected,
     offered,
+    onLike,
   } = props;
-
-  const handleLike = () => {
-    console.log("like", id);
-  };
 
   return (
     <Card style={{ marginVertical: 10, backgroundColor: "white" }}>
@@ -37,7 +34,7 @@ export const JobItemCard = (props) => {
             size={24}
             color="crimson"
             fill={likes ? "crimson" : "none"}
-            onPress={handleLike}
+            onPress={onLike}
           />
         )}
       />

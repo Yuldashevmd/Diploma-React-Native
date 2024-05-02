@@ -11,9 +11,11 @@ import { X } from "react-native-feather";
 import { Button, Chip, TextInput } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
+import { useSearch } from "../../model/hook";
 
 export const SearchScreenFilterModal = (props) => {
   const { open, close, title } = props;
+  const { sort, setSort } = useSearch();
   const {
     control,
     handleSubmit,
@@ -25,16 +27,37 @@ export const SearchScreenFilterModal = (props) => {
 
   // FINISH
   const handleFinish = (value) => {
-    console.log(
-      { ...value, salary_type: salaryType, search_by: searchBy },
-      "value"
-    );
+    if (searchBy === "vacancy_name") {
+      setSort({
+        ...sort,
+        salary_type: salaryType,
+        title: value.search,
+        salary: value.salary_from || null,
+        orgname: null,
+      });
+    }
+    if (searchBy === "organization_name") {
+      setSort({
+        ...sort,
+        salary_type: salaryType,
+        orgname: value.search,
+        salary: value.salary_from || null,
+        title: null,
+      });
+    }
     close();
   };
 
   // RESET
   const handleReset = () => {
     reset();
+    setSort({
+      title: null,
+      type: "all",
+      orgname: null,
+      salary: null,
+      salary_type: null,
+    });
     close();
   };
 
@@ -137,7 +160,6 @@ export const SearchScreenFilterModal = (props) => {
                     activeOutlineColor="#fb676b"
                   />
                 )}
-                rules={{ required: true }}
               />
               <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
                 <Chip
@@ -188,9 +210,7 @@ export const SearchScreenFilterModal = (props) => {
               style={{
                 borderRadius: 8,
                 height: 50,
-                display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
               }}
             >
               Submit

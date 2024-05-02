@@ -3,81 +3,31 @@ import { Container } from "../../../shared/styles/global";
 import { JobItemCard } from "../../../shared/ui/JobItemCard";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
-import { useState } from "react";
-
-const cards = [
-  {
-    id: 1,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-
-    likes: true,
-    salary_from: "15000",
-    salary_type: "sum",
-  },
-  {
-    id: 2,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    likes: true,
-    salary_from: "5000",
-    salary_type: "euro",
-  },
-  {
-    id: 3,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    likes: true,
-    salary_from: "5000",
-    salary_type: "euro",
-  },
-  {
-    id: 4,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    likes: true,
-    salary_from: "5000",
-    salary_type: "euro",
-  },
-  {
-    id: 5,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    likes: true,
-    salary_from: "5000",
-    salary_type: "euro",
-  },
-  {
-    id: 6,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-    likes: true,
-    salary_from: "5000",
-    salary_type: "euro",
-  },
-];
+import { useEffect } from "react";
+import { useSaved } from "../model/hook";
+import { getSaved } from "../api";
 
 export const SavedScreen = ({ navigation }) => {
-  const [refreshing, setRefreshing] = useState(false);
+  const { data, setData, pagination, setPagination, pending, setPending } =
+    useSaved();
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  // GET
+  const GET = async () => {
+    setPending(true);
+    const res = await getSaved(pagination);
+    if (res.results) {
+      setData(res.results);
+    }
+
+    if (res?.status === 401) {
+      navigation.navigate("Signin");
+    }
+    setPending(false);
   };
+
+  useEffect(() => {
+    GET();
+  }, [pagination]);
 
   return (
     <Container>
@@ -90,16 +40,16 @@ export const SavedScreen = ({ navigation }) => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={cards}
+        data={data}
         renderItem={({ item }) => (
           <JobItemCard
             title={item.title}
-            subtitle={Date.now()}
-            content={item.content}
-            salary_from={item.salary_from}
-            salary_type={item.salary_type}
+            subtitle={Intl.DateTimeFormat("ru").format(item.create_data)}
+            content={item.about}
+            salary_from={item.salery_from}
+            salary_type={item.currency}
             id={item.id}
-            likes={item.likes}
+            likes={true}
             onClick={() =>
               navigation.navigate("SearchScreenItem", { id: item.id })
             }
@@ -107,8 +57,14 @@ export const SavedScreen = ({ navigation }) => {
         )}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<ListEmpty />}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
+        refreshing={pending}
+        onRefresh={GET}
+        onEndReached={() =>
+          setPagination({
+            ...pagination,
+            pageSize: Number(pagination.pageSize) + 10,
+          })
+        }
       />
     </Container>
   );

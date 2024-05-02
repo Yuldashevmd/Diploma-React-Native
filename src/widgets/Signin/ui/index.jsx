@@ -12,6 +12,9 @@ import { LogIn } from "react-native-feather";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "react-native-paper";
 import { useUserToken } from "../model/hook";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signIn } from "../api";
+import { useState } from "react";
 
 export const SigninUI = ({ navigation }) => {
   const {
@@ -20,20 +23,26 @@ export const SigninUI = ({ navigation }) => {
     formState: { errors },
     reset,
   } = useForm();
-  const { token, signIn, pending } = useUserToken();
+  const { setToken } = useUserToken();
+  const [loading, setLoading] = useState(false);
 
+  // FINISH
   const handleFinish = async (values) => {
+    setLoading(true);
     const body = {
       name: values.login,
       password: values.password,
     };
-    await signIn(body);
-    if (token) {
+    const res = await signIn(body);
+    if (res) {
+      setToken(res.token);
+      await AsyncStorage.setItem("access_token", res.token);
       setTimeout(() => {
         navigation.navigate("Search");
       }, 1000);
     }
     reset();
+    setLoading(false);
   };
 
   return (
@@ -100,10 +109,11 @@ export const SigninUI = ({ navigation }) => {
             )}
             <View style={{ marginVertical: 10 }}>
               <Button
-                loading={pending}
+                disabled={loading}
+                loading={loading}
                 textColor="#fff"
                 buttonColor="crimson"
-                style={{ borderRadius: 8 }}
+                style={{ borderRadius: 8, textAlign: "center" }}
                 onPress={handleSubmit(handleFinish)}
               >
                 <Text style={{ color: "white" }}>Sign in</Text>

@@ -1,30 +1,62 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Heart, Mail, Phone, Send } from "react-native-feather";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { SalaryText } from "../../../entities/SalaryText";
 import { ActivityIndicator, Button } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSearchItem } from "../model/hook";
+import { handleLike, postResponse } from "../api";
+import { useUserToken } from "../../../widgets/Signin/model/hook";
 
 export const SearchScreenItem = ({ navigation, route }) => {
   const { id } = route.params;
-  const { searchItem, pending, getSearchItem } = useSearchItem(id);
+  const { getSearchItem, searchItem, pending } = useSearchItem(id);
+  const [loading, setLoading] = useState(false);
+  const { token } = useUserToken();
+
+  // LIKE
+  const onLike = async () => {
+    if (token === null) {
+      navigation.navigate("Signin");
+    } else {
+      const body = {
+        like: searchItem?.like ? false : true,
+        job_id: id,
+      };
+      setLoading(true);
+      const res = await handleLike(body);
+      res.status === 401 && navigation.navigate("Signin");
+      res.status === 201 && getSearchItem(id);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Heart width={24} height={24} color="crimson" />,
-      title: "Front-end developer ",
+      headerRight: () => (
+        <Heart
+          width={24}
+          height={24}
+          color="crimson"
+          onPress={onLike}
+          fill={searchItem?.like ? "crimson" : "transparent"}
+        />
+      ),
+      title: searchItem?.title,
     });
   }, []);
 
-  console.log(searchItem, "searchItem");
-
+  // SEND RESPONSE
   const handleSendResponse = async () => {
-    const token = await AsyncStorage.getItem("access_token");
     if (token === null) {
       navigation.navigate("Signin");
+    } else {
+      setLoading(true);
+      const res = await postResponse(searchItem.id);
+      res.status === 401 && navigation.navigate("Signin");
+      res.status === 201 && getSearchItem(id);
+      setLoading(false);
     }
   };
 
@@ -52,9 +84,14 @@ export const SearchScreenItem = ({ navigation, route }) => {
       >
         <HeaderTextScreen
           title={searchItem?.title}
-          subtitle={"Date:10.02.2024"}
+          subtitle={Intl.DateTimeFormat("en-GB").format(
+            new Date(searchItem?.create_data || Date.now())
+          )}
         />
-        <SalaryText salary={"500"} salary_type={"sum"} />
+        <SalaryText
+          salary={searchItem?.salery_from}
+          salary_type={searchItem?.currency}
+        />
         <View
           style={{
             flexDirection: "row",
@@ -71,7 +108,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             buttonColor="#E1D5E7"
             textColor="#9673A6"
           >
-            50 people seen
+            {searchItem?.seen} people seen
           </Button>
           <Button
             style={{ borderRadius: 8 }}
@@ -79,32 +116,24 @@ export const SearchScreenItem = ({ navigation, route }) => {
             buttonColor="#F8CECC"
             textColor="crimson"
           >
-            29 people responded
+            {searchItem?.rejects} people rejected
           </Button>
+        </View>
+        <View aria-label="company" style={{ marginVertical: 10, gap: 5 }}>
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>Company:</Text>
+          <Text style={style.text}>{searchItem?.org_name}</Text>
         </View>
         <View aria-label="experience" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Experience:</Text>
-          <Text style={style.text}>2 year of experience in JavaScript</Text>
+          <Text style={style.text}>{searchItem?.experience}</Text>
         </View>
         <View aria-label="requirements" style={{ marginVertical: 10, gap: 8 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Requirements:</Text>
-          <Text style={style.text}>-HTML,CSS,JS</Text>
-          <Text style={style.text}>-REACT JS</Text>
-          <Text style={style.text}>-REACT NATIVE</Text>
-          <Text style={style.text}>-VUE JS</Text>
+          <Text>{searchItem?.requrements}</Text>
         </View>
         <View aria-label="content" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Content:</Text>
-          <Text style={style.text}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis,
-            aliquam, aut voluptas incidunt quisquam iure explicabo, eligendi
-            voluptatibus illo alias temporibus adipisci! Blanditiis, architecto
-            voluptatibus. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Quibusdam adipisci quam possimus veniam neque repudiandae a
-            ipsum tempora nulla odio quo autem corporis explicabo harum corrupti
-            distinctio earum ratione praesentium quaerat sequi facere, porro
-            quidem?
-          </Text>
+          <Text style={style.text}>{searchItem?.about}</Text>
         </View>
         <View aria-label="address" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Address:</Text>
@@ -144,31 +173,24 @@ export const SearchScreenItem = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
-      <View
+
+      <Button
+        loading={loading}
+        disabled={searchItem?.responded || loading}
+        textColor="white"
+        onPress={handleSendResponse}
+        mode="contained"
+        buttonColor="green"
+        icon={"send"}
         style={{
-          width: "100%",
-          borderTopWidth: 1,
-          borderTopColor: "lightgrey",
-          paddingTop: 10,
+          height: 50,
+          marginBottom: 10,
+          borderRadius: 8,
+          justifyContent: "center",
         }}
       >
-        <Button
-          onPress={handleSendResponse}
-          mode="contained"
-          buttonColor="green"
-          icon={"send"}
-          style={{
-            height: 50,
-            marginBottom: 10,
-            borderRadius: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          Response
-        </Button>
-      </View>
+        Response
+      </Button>
     </Container>
   );
 };

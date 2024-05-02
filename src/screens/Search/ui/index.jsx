@@ -4,16 +4,57 @@ import { JobItemCard } from "../../../shared/ui/JobItemCard";
 import { SearchScreenFilter } from "./Filter";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { Button } from "react-native-paper";
-import { useState } from "react";
-import { useSearch } from "./model/hook";
+import { useSearch } from "../model/hook";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
+import { useUserToken } from "../../../widgets/Signin/model/hook";
+import { useEffect } from "react";
+import { getData } from "../api";
 
 export const SearchScreen = ({ navigation }) => {
-  const [sort, setSort] = useState("all");
-  const { getSearchData, searchData, pending } = useSearch();
+  const {
+    data,
+    setData,
+    pending,
+    setPending,
+    setSort,
+    sort,
+    pagination,
+    setPagination,
+  } = useSearch();
+  const { token } = useUserToken();
 
-  const handleRefresh = async () => {
-    await getSearchData();
+  // GET
+  const GET = async () => {
+    setPending(true);
+    const res = await getData(pagination, sort);
+    if (res?.results) {
+      setData(res.results);
+    }
+
+    if (res?.status === 401) {
+      navigation.navigate("Signin");
+    }
+    setPending(false);
+  };
+
+  // GET
+  useEffect(() => {
+    GET();
+  }, [sort]);
+
+  // LIKE
+  const onLike = async () => {
+    if (token === null) {
+      navigation.navigate("Signin");
+    } else {
+      const body = {
+        like: likes ? false : true,
+        job_id: id,
+      };
+      const res = await handleLike(body);
+      res.status === 401 && navigation.navigate("Signin");
+      res.status === 201 && getSearchData(pagination, sort);
+    }
   };
 
   if (pending) return <LoadingUI />;
@@ -28,8 +69,8 @@ export const SearchScreen = ({ navigation }) => {
             buttonColor="#D5E8D4"
             textColor="green"
             style={{ borderRadius: 8 }}
-            onPress={() => setSort("all")}
-            icon={sort === "all" ? "check" : null}
+            onPress={() => setSort({ ...sort, type: "all" })}
+            icon={sort.type === "all" ? "check" : null}
           >
             All
           </Button>
@@ -38,8 +79,8 @@ export const SearchScreen = ({ navigation }) => {
             buttonColor="#FFE6CC"
             textColor="#FF8000"
             style={{ borderRadius: 8 }}
-            onPress={() => setSort("popular")}
-            icon={sort === "popular" ? "check" : null}
+            onPress={() => setSort({ ...sort, type: "popular" })}
+            icon={sort.type === "popular" ? "check" : null}
           >
             Popular
           </Button>
@@ -48,7 +89,7 @@ export const SearchScreen = ({ navigation }) => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={searchData}
+        data={data}
         renderItem={({ item }) => (
           <JobItemCard
             key={item.id}
@@ -58,7 +99,8 @@ export const SearchScreen = ({ navigation }) => {
             salary_from={item.salery_from}
             salary_type={item.currency}
             id={item.id}
-            likes={item?.likes}
+            likes={item?.like}
+            onLike={onLike}
             onClick={() =>
               navigation.navigate("SearchScreenItem", { id: item.id })
             }
@@ -67,7 +109,13 @@ export const SearchScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<ListEmpty />}
         refreshing={pending}
-        onRefresh={handleRefresh}
+        onRefresh={GET}
+        onEndReached={() =>
+          setPagination({
+            ...pagination,
+            pageSize: Number(pagination.pageSize) + 10,
+          })
+        }
       />
     </Container>
   );

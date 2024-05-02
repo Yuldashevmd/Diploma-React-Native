@@ -2,10 +2,12 @@ import { FlatList, SafeAreaView, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { SegmentedButtons } from "react-native-paper";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Check, List, X } from "react-native-feather";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { JobItemCard } from "../../../shared/ui/JobItemCard";
+import { useResponse } from "../model/hook";
+import { getResponse } from "../api";
 
 const buttons = [
   {
@@ -38,91 +40,35 @@ const buttons = [
   },
 ];
 
-const cards = [
-  {
-    id: 1,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    likes: true,
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ugfga fga uygayg awygauywg fyuag yag yuagw yfgawfauysg",
-    rejected: true,
-    offered: false,
-    salary_type: "euro",
-    salary_from: "850",
-  },
-  {
-    id: 2,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    likes: false,
-    offered: true,
-
-    salary_type: "sum",
-    salary_from: "15000",
-    rejected: false,
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
-  },
-  {
-    id: 3,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    likes: false,
-    offered: false,
-    salary_type: "dollar",
-    salary_from: "500",
-    rejected: true,
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
-  },
-  {
-    id: 4,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    likes: false,
-    offered: true,
-
-    salary_type: "sum",
-    salary_from: "1500",
-    rejected: false,
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
-  },
-  {
-    id: 5,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    likes: false,
-    offered: false,
-    salary_type: "dollar",
-    salary_from: "1500",
-    rejected: true,
-    content:
-      "lorem ipsum dawodjawido wa dohawdh awiod a wgdyagwd gaw dogagfay ",
-  },
-];
 export const ResponseScreen = ({ navigation }) => {
-  const [value, setValue] = useState("all");
-  const [data, setData] = useState(cards);
-  const [refreshing, setRefreshing] = useState(false);
+  const {
+    data,
+    pending,
+    type,
+    setType,
+    setPending,
+    setData,
+    pagination,
+    setPagination,
+  } = useResponse();
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  // GET
+  const GET = async () => {
+    setPending(true);
+    const res = await getResponse(type, pagination);
+    if (res.results) {
+      setData(res.results);
+    }
+    if (res?.status === 401) {
+      navigation.navigate("Signin");
+    }
+    setPending(false);
   };
 
-  // WATCH-INPUT-CHANGE-AND-FETCH
+  // WATCH
   useEffect(() => {
-    if (value !== "all") {
-      const filtered = cards.filter((item) => item[value]);
-      setData(filtered);
-    } else {
-      setData(cards);
-    }
-  }, [value]);
+    GET();
+  }, [type, pagination]);
 
   return (
     <Container>
@@ -133,8 +79,8 @@ export const ResponseScreen = ({ navigation }) => {
         />
         <View style={{ marginVertical: 10 }}>
           <SegmentedButtons
-            value={value}
-            onValueChange={setValue}
+            value={type}
+            onValueChange={setType}
             buttons={buttons}
           />
         </View>
@@ -142,27 +88,33 @@ export const ResponseScreen = ({ navigation }) => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={data}
+        data={data?.responsed_job}
         renderItem={({ item }) => (
           <JobItemCard
             title={item.title}
             subtitle={Date.now()}
-            content={item.content}
-            salary_from={item.salary_from}
-            salary_type={item.salary_type}
+            content={item.about}
+            salary_from={item?.salery_from}
+            salary_type={item?.currency}
             id={item.id}
-            likes={item.likes}
-            rejected={item.rejected}
-            offered={item.offered}
+            likes={item?.likes}
+            rejected={item?.answer === "rejected" ? true : false}
+            offered={item?.answer === "apply" ? true : false}
             onClick={() =>
               navigation.navigate("SearchScreenItem", { id: item.id })
             }
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(_, index) => index}
         ListEmptyComponent={<ListEmpty />}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
+        refreshing={pending}
+        onRefresh={GET}
+        onEndReached={() =>
+          setPagination({
+            ...pagination,
+            pageSize: Number(pagination.pageSize) + 10,
+          })
+        }
       />
     </Container>
   );
