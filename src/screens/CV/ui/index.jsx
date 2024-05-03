@@ -5,37 +5,26 @@ import { FAB } from "react-native-paper";
 import { Plus } from "react-native-feather";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { CvCard } from "../../../shared/ui/CvCard";
-import { useState } from "react";
+import { useEffect } from "react";
+import { deleteResume, getData } from "../api";
+import { LoadingUI } from "../../../shared/ui/LoadingUi";
+import { useCV } from "../model/hook";
 
-const cards = [
-  {
-    id: 1,
-    title: "Front-end developer",
-    subtitle: "10.02.2024",
-    skills: "HTML,CSS,JS,REACT-JS,VUE-JS,NEXT-JS,NODE-JS,PHP,LARAVEL",
-    jobs: "2 years of real experience in web development",
-    content:
-      "Some text about my cv, Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-  },
-  {
-    id: 2,
-    title: "Back-end developer",
-    subtitle: "10.02.2024",
-    skills: "HTML,CSS,NODE-JS,PHP,LARAVEL,EXPRESS-JS",
-    jobs: "2 years of real experience in web development",
-    content:
-      "Some text about my cv, Lorem ipsum dolor sit amet consectetur adipisicing elit. lorem ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit ipsum dolor sit amet consectetur adipisicing elit",
-  },
-];
 export const CV = ({ navigation }) => {
-  const [refreshing, setRefreshing] = useState(false);
+  const { data, setData, pending, setPending, pagination, setPagination } =
+    useCV();
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  // GET
+  const GET = async () => {
+    const res = await getData(pagination, setPending, setData);
+    if (res?.status === 401) return navigation.navigate("Signin");
   };
+
+  // LOAD
+  useEffect(() => {
+    !data && GET();
+  }, []);
+
   // DELETE
   const handleDelete = async (id) => {
     Alert.alert(
@@ -49,7 +38,10 @@ export const CV = ({ navigation }) => {
         },
         {
           text: "OK",
-          onPress: () => console.log("OK Pressed", id),
+          onPress: async () => {
+            const res = await deleteResume(id);
+            res.status === 204 && getData(pagination, setPending, setData);
+          },
         },
       ],
       { cancelable: true }
@@ -59,27 +51,35 @@ export const CV = ({ navigation }) => {
   return (
     <Container>
       <HeaderTextScreen title="CV's" subtitle="Here you can see your CV's" />
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        data={cards}
-        renderItem={({ item }) => (
-          <CvCard
-            title={item.title}
-            subtitle={item.subtitle}
-            skills={item.skills}
-            jobs={item.jobs}
-            content={item.content}
-            id={item.id}
-            onEdit={() => navigation.navigate("CVScreenCrud", { id: item.id })}
-            onDelete={() => handleDelete(item.id)}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={<ListEmpty />}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-      />
+      {pending ? (
+        <LoadingUI />
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={data}
+          renderItem={({ item }) => (
+            <CvCard
+              title={item.title}
+              subtitle={Intl.DateTimeFormat("ru").format(
+                new Date(item.create_data) || Date.now()
+              )}
+              skills={item.skills}
+              jobs={item.jobs}
+              content={item.about}
+              id={item.id}
+              onEdit={() =>
+                navigation.navigate("CVScreenCrud", { id: item.id })
+              }
+              onDelete={() => handleDelete(item.id)}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<ListEmpty />}
+          refreshing={pending}
+          onRefresh={GET}
+        />
+      )}
       <SafeAreaView>
         <FAB
           style={{

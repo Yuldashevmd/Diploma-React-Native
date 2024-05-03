@@ -11,18 +11,30 @@ import { Searchbar } from "react-native-paper";
 import { SearchScreenFilterModal } from "../ModalFilter";
 import { useDisclosure } from "../../../../shared/hooks/useDisclosure";
 import { useSearch } from "../../model/hook";
+import { getData } from "../../api";
 
 export const SearchScreenFilter = () => {
+  const { pagination, sort, setSort, setData, setPending } = useSearch();
   const [searchValue, setSearchValue] = useState("");
-  const { sort, setSort } = useSearch();
   const { isOpen, open, close } = useDisclosure();
 
   //   FINISH
   const handleFinish = () => {
+    let sorted;
     if (searchValue.length > 0) {
-      setSort({ ...sort, title: searchValue });
+      sorted = {
+        ...sort,
+        title: searchValue,
+      };
+      setSort(sorted);
+      getData(pagination, sorted, setData, setPending);
     } else {
-      setSort({ ...sort, title: null });
+      sorted = {
+        ...sort,
+        title: null,
+      };
+      setSort(sorted);
+      getData(pagination, sorted, setData, setPending);
     }
   };
 

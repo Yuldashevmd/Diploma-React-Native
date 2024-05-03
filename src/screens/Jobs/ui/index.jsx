@@ -16,21 +16,15 @@ export const JobsScreen = ({ navigation }) => {
 
   // GET
   const GET = async () => {
-    setPending(true);
-    const res = await getData(pagination);
-    if (res.results) {
-      setData(res.results);
-    }
-
-    if (res?.status === 401) {
-      navigation.navigate("Signin");
-    }
-    setPending(false);
+    const res = await getData(pagination, setPending, setData);
+    if (res?.status === 401) return navigation.navigate("Signin");
   };
 
+  // LOAD
   useEffect(() => {
-    GET();
-  }, [pagination]);
+    !data && GET();
+  }, []);
+
   // DELETE
   const handleDelete = async (id) => {
     Alert.alert(
@@ -46,7 +40,7 @@ export const JobsScreen = ({ navigation }) => {
           text: "OK",
           onPress: async () => {
             const res = await deleteJob(id);
-            res.status === 204 && GET();
+            res.status === 204 && getData(pagination, setPending, setData);
           },
         },
       ],
@@ -84,12 +78,6 @@ export const JobsScreen = ({ navigation }) => {
         ListEmptyComponent={<ListEmpty />}
         refreshing={pending}
         onRefresh={GET}
-        onEndReached={() =>
-          setPagination({
-            ...pagination,
-            pageSize: Number(pagination.pageSize) + 10,
-          })
-        }
       />
       <FAB
         style={{

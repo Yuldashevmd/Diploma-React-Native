@@ -27,16 +27,18 @@ export const JobItemCard = (props) => {
         subtitle={Intl.DateTimeFormat("en-GB").format(new Date(subtitle))}
         subtitleStyle={{ fontWeight: 400, color: "grey" }}
         rightStyle={{ marginRight: 10 }}
-        right={(props) => (
-          <Heart
-            {...props}
-            name="heart"
-            size={24}
-            color="crimson"
-            fill={likes ? "crimson" : "none"}
-            onPress={onLike}
-          />
-        )}
+        right={(props) =>
+          likes && onClick ? (
+            <Heart
+              {...props}
+              name="heart"
+              size={24}
+              color="crimson"
+              fill={likes ? "crimson" : "none"}
+              onPress={onLike}
+            />
+          ) : null
+        }
       />
       <Card.Content>
         <SalaryText salary={salary_from} salary_type={salary_type} />

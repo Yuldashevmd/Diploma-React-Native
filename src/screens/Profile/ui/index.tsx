@@ -1,33 +1,39 @@
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
-import {
-  ActivityIndicator,
-  Avatar,
-  Button,
-  Divider,
-  List,
-} from "react-native-paper";
+import { Avatar, Button, Divider, List } from "react-native-paper";
 import { MyJobCard } from "../../../shared/ui/MyJobCard";
-import { useUser } from "../../../shared/hooks/useUser";
 import { RefreshCcw } from "react-native-feather";
 import { CvCard } from "../../../shared/ui/CvCard";
+import { useProfile } from "../model/hook";
+import { getData } from "../api";
+import { useEffect } from "react";
+import { LoadingUI } from "../../../shared/ui/LoadingUi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserToken } from "../../../widgets/Signin/model/hook";
 
 export const ProfileScreen = ({ navigation }) => {
-  const { data, pending, refetch } = useUser();
-
+  const { data, pending, setData, setPending } = useProfile();
+  const { token, setToken } = useUserToken();
   // LOG-OUT
-  const handleLogout = () => {
-    console.log("logged out");
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("access_token");
+    setToken(null);
   };
 
-  if (pending)
-    return (
-      <ActivityIndicator
-        animating={pending}
-        color="crimson"
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      />
-    );
+  // GET
+  const GET = async () => {
+    const res = await getData(setData, setPending);
+    if (res.status === 401) navigation.navigate("Signin");
+  };
+
+  // LOAD
+  useEffect(() => {
+    !data && GET();
+  }, []);
+
+  if (token === null) return navigation.navigate("Signin");
+
+  if (pending) return <LoadingUI />;
 
   return (
     <Container>
@@ -54,7 +60,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20 }}>{data?.name}</Text>
             <Text style={{ fontSize: 14, color: "grey" }}>
-              Front-end developer
+              {data?.occupation}
             </Text>
             <Text style={{ fontSize: 14, color: "grey" }}>{data?.email}</Text>
           </View>
@@ -62,7 +68,7 @@ export const ProfileScreen = ({ navigation }) => {
         <View>
           <RefreshCcw
             disabled={pending}
-            onPress={() => refetch()}
+            onPress={GET}
             width={24}
             height={24}
             color={"grey"}
@@ -77,13 +83,20 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
               Resumes:
             </Text>
-            <CvCard
-              title="Alimov Alim Alimovich"
-              subtitle="Front-end developer"
-              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
-              skills={"HTML,CSS,JS,REACT-JS,VUE-JS,NEXT-JS,NODE-JS,PHP,LARAVEL"}
-              jobs="Google, Facebook, Meta"
-            />
+            {data?.resumes.map((item) => (
+              <View key={item.id}>
+                <CvCard
+                  title={item.title}
+                  subtitle={Intl.DateTimeFormat("ru").format(
+                    new Date(item.create_data) || Date.now()
+                  )}
+                  content={item.about}
+                  skills={item.skills}
+                  jobs={item.experinces}
+                />
+              </View>
+            ))}
+
             <Button onPress={() => navigation.navigate("CV")}>Show all</Button>
           </View>
           <Divider />
@@ -91,14 +104,19 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
               Jobs:
             </Text>
-            <MyJobCard
-              title="Front-end developer"
-              subtitle="10.02.2024"
-              content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
-              salary_from={500}
-              salary_type="sum"
-              likes
-            />
+            {data?.my_jobs.map((item) => (
+              <View key={item.id}>
+                <MyJobCard
+                  title={item.title}
+                  subtitle={Intl.DateTimeFormat("ru").format(
+                    new Date(item.create_data) || Date.now()
+                  )}
+                  content={item.about}
+                  salary_from={item.salery_from}
+                  salary_type={item.currency}
+                />
+              </View>
+            ))}
             <Button onPress={() => navigation.navigate("Jobs")}>
               Show all
             </Button>

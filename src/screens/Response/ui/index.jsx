@@ -7,7 +7,8 @@ import { Check, List, X } from "react-native-feather";
 import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { JobItemCard } from "../../../shared/ui/JobItemCard";
 import { useResponse } from "../model/hook";
-import { getResponse } from "../api";
+import { getData } from "../api";
+import { LoadingUI } from "../../../shared/ui/LoadingUi";
 
 const buttons = [
   {
@@ -54,21 +55,14 @@ export const ResponseScreen = ({ navigation }) => {
 
   // GET
   const GET = async () => {
-    setPending(true);
-    const res = await getResponse(type, pagination);
-    if (res.results) {
-      setData(res.results);
-    }
-    if (res?.status === 401) {
-      navigation.navigate("Signin");
-    }
-    setPending(false);
+    const res = await getData(type, pagination, setPending, setData);
+    if (res?.status === 401) return navigation.navigate("Signin");
   };
 
-  // WATCH
+  // LOAD
   useEffect(() => {
     GET();
-  }, [type, pagination]);
+  }, [type]);
 
   return (
     <Container>
@@ -85,37 +79,35 @@ export const ResponseScreen = ({ navigation }) => {
           />
         </View>
       </SafeAreaView>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        data={data?.responsed_job}
-        renderItem={({ item }) => (
-          <JobItemCard
-            title={item.title}
-            subtitle={Date.now()}
-            content={item.about}
-            salary_from={item?.salery_from}
-            salary_type={item?.currency}
-            id={item.id}
-            likes={item?.likes}
-            rejected={item?.answer === "rejected" ? true : false}
-            offered={item?.answer === "apply" ? true : false}
-            onClick={() =>
-              navigation.navigate("SearchScreenItem", { id: item.id })
-            }
-          />
-        )}
-        keyExtractor={(_, index) => index}
-        ListEmptyComponent={<ListEmpty />}
-        refreshing={pending}
-        onRefresh={GET}
-        onEndReached={() =>
-          setPagination({
-            ...pagination,
-            pageSize: Number(pagination.pageSize) + 10,
-          })
-        }
-      />
+      {pending ? (
+        <LoadingUI />
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={data}
+          renderItem={({ item }) => (
+            <JobItemCard
+              title={item.title}
+              subtitle={Date.now()}
+              content={item.about}
+              salary_from={item?.salery_from}
+              salary_type={item?.currency}
+              id={item.id}
+              likes={item?.likes}
+              rejected={item?.answer === "rejected" ? true : false}
+              offered={item?.answer === "apply" ? true : false}
+              onClick={() =>
+                navigation.navigate("SearchScreenItem", { id: item.id })
+              }
+            />
+          )}
+          keyExtractor={(_, index) => index}
+          ListEmptyComponent={<ListEmpty />}
+          refreshing={pending}
+          onRefresh={GET}
+        />
+      )}
     </Container>
   );
 };

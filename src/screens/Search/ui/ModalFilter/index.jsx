@@ -12,10 +12,11 @@ import { Button, Chip, TextInput } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useSearch } from "../../model/hook";
+import { getData } from "../../api";
 
 export const SearchScreenFilterModal = (props) => {
   const { open, close, title } = props;
-  const { sort, setSort } = useSearch();
+  const { pagination, sort, setSort, setData, setPending } = useSearch();
   const {
     control,
     handleSubmit,
@@ -27,23 +28,28 @@ export const SearchScreenFilterModal = (props) => {
 
   // FINISH
   const handleFinish = (value) => {
+    let sorted;
     if (searchBy === "vacancy_name") {
-      setSort({
+      sorted = {
         ...sort,
         salary_type: salaryType,
         title: value.search,
         salary: value.salary_from || null,
         orgname: null,
-      });
+      };
+      setSort(sorted);
+      getData(pagination, sorted, setData, setPending);
     }
     if (searchBy === "organization_name") {
-      setSort({
+      sorted = {
         ...sort,
         salary_type: salaryType,
         orgname: value.search,
         salary: value.salary_from || null,
         title: null,
-      });
+      };
+      setSort(sorted);
+      getData(pagination, sorted, setData, setPending);
     }
     close();
   };
@@ -51,13 +57,15 @@ export const SearchScreenFilterModal = (props) => {
   // RESET
   const handleReset = () => {
     reset();
-    setSort({
+    let sorted = {
       title: null,
       type: "all",
       orgname: null,
       salary: null,
       salary_type: null,
-    });
+    };
+    setSort(sorted);
+    getData(pagination, sorted, setData, setPending);
     close();
   };
 

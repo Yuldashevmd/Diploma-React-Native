@@ -5,7 +5,8 @@ import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { useEffect } from "react";
 import { useSaved } from "../model/hook";
-import { getSaved } from "../api";
+import { getData } from "../api";
+import { LoadingUI } from "../../../shared/ui/LoadingUi";
 
 export const SavedScreen = ({ navigation }) => {
   const { data, setData, pagination, setPagination, pending, setPending } =
@@ -13,21 +14,14 @@ export const SavedScreen = ({ navigation }) => {
 
   // GET
   const GET = async () => {
-    setPending(true);
-    const res = await getSaved(pagination);
-    if (res.results) {
-      setData(res.results);
-    }
-
-    if (res?.status === 401) {
-      navigation.navigate("Signin");
-    }
-    setPending(false);
+    const res = await getData(pagination, setData, setPending);
+    if (res?.status === 401) return navigation.navigate("Signin");
   };
 
+  //LOAD
   useEffect(() => {
-    GET();
-  }, [pagination]);
+    !data && GET();
+  }, []);
 
   return (
     <Container>
@@ -37,35 +31,33 @@ export const SavedScreen = ({ navigation }) => {
           subtitle="Here you can see saved jobs"
         />
       </SafeAreaView>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        data={data}
-        renderItem={({ item }) => (
-          <JobItemCard
-            title={item.title}
-            subtitle={Intl.DateTimeFormat("ru").format(item.create_data)}
-            content={item.about}
-            salary_from={item.salery_from}
-            salary_type={item.currency}
-            id={item.id}
-            likes={true}
-            onClick={() =>
-              navigation.navigate("SearchScreenItem", { id: item.id })
-            }
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={<ListEmpty />}
-        refreshing={pending}
-        onRefresh={GET}
-        onEndReached={() =>
-          setPagination({
-            ...pagination,
-            pageSize: Number(pagination.pageSize) + 10,
-          })
-        }
-      />
+      {pending ? (
+        <LoadingUI />
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={data}
+          renderItem={({ item }) => (
+            <JobItemCard
+              title={item.title}
+              subtitle={Intl.DateTimeFormat("ru").format(item.create_data)}
+              content={item.about}
+              salary_from={item.salery_from}
+              salary_type={item.currency}
+              id={item.id}
+              likes={true}
+              onClick={() =>
+                navigation.navigate("SearchScreenItem", { id: item.id })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<ListEmpty />}
+          refreshing={pending}
+          onRefresh={GET}
+        />
+      )}
     </Container>
   );
 };

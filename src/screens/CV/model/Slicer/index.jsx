@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
-export const savedUserSlice = create((set) => ({
+export const useCVSlice = create((set) => ({
   data: null,
+  pending: false,
   pagination: {
     pageNumber: 1,
     pageSize: 10,
   },
-  pending: false,
+  setData: (data) => set({ data }),
   setPagination: (pagination) => set({ pagination }),
   setPending: (pending) => set({ pending }),
-  setData: (data) => set({ data }),
 }));

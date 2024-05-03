@@ -6,7 +6,6 @@ import { ListEmpty } from "../../../shared/ui/EmptyList";
 import { Button } from "react-native-paper";
 import { useSearch } from "../model/hook";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
-import { useUserToken } from "../../../widgets/Signin/model/hook";
 import { useEffect } from "react";
 import { getData } from "../api";
 
@@ -21,43 +20,17 @@ export const SearchScreen = ({ navigation }) => {
     pagination,
     setPagination,
   } = useSearch();
-  const { token } = useUserToken();
 
   // GET
   const GET = async () => {
-    setPending(true);
-    const res = await getData(pagination, sort);
-    if (res?.results) {
-      setData(res.results);
-    }
-
-    if (res?.status === 401) {
-      navigation.navigate("Signin");
-    }
-    setPending(false);
+    const res = await getData(pagination, sort, setData, setPending);
+    if (res?.status === 401) return navigation.navigate("Signin");
   };
 
-  // GET
+  // LOAD
   useEffect(() => {
-    GET();
-  }, [sort]);
-
-  // LIKE
-  const onLike = async () => {
-    if (token === null) {
-      navigation.navigate("Signin");
-    } else {
-      const body = {
-        like: likes ? false : true,
-        job_id: id,
-      };
-      const res = await handleLike(body);
-      res.status === 401 && navigation.navigate("Signin");
-      res.status === 201 && getSearchData(pagination, sort);
-    }
-  };
-
-  if (pending) return <LoadingUI />;
+    !data && GET();
+  }, []);
 
   return (
     <Container>
@@ -69,7 +42,11 @@ export const SearchScreen = ({ navigation }) => {
             buttonColor="#D5E8D4"
             textColor="green"
             style={{ borderRadius: 8 }}
-            onPress={() => setSort({ ...sort, type: "all" })}
+            onPress={() => {
+              let sorted = { ...sort, type: "all" };
+              setSort(sorted);
+              getData(pagination, sorted, setData, setPending);
+            }}
             icon={sort.type === "all" ? "check" : null}
           >
             All
@@ -79,44 +56,46 @@ export const SearchScreen = ({ navigation }) => {
             buttonColor="#FFE6CC"
             textColor="#FF8000"
             style={{ borderRadius: 8 }}
-            onPress={() => setSort({ ...sort, type: "popular" })}
+            onPress={() => {
+              let sorted = { ...sort, type: "popular" };
+              setSort(sorted);
+              getData(pagination, sorted, setData, setPending);
+            }}
             icon={sort.type === "popular" ? "check" : null}
           >
             Popular
           </Button>
         </View>
       </SafeAreaView>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        data={data}
-        renderItem={({ item }) => (
-          <JobItemCard
-            key={item.id}
-            title={item.title}
-            subtitle={item.create_data}
-            content={item.about}
-            salary_from={item.salery_from}
-            salary_type={item.currency}
-            id={item.id}
-            likes={item?.like}
-            onLike={onLike}
-            onClick={() =>
-              navigation.navigate("SearchScreenItem", { id: item.id })
-            }
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={<ListEmpty />}
-        refreshing={pending}
-        onRefresh={GET}
-        onEndReached={() =>
-          setPagination({
-            ...pagination,
-            pageSize: Number(pagination.pageSize) + 10,
-          })
-        }
-      />
+      {pending ? (
+        <LoadingUI />
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          data={data}
+          renderItem={({ item }) => (
+            <JobItemCard
+              key={item.id}
+              title={item.title}
+              subtitle={item.create_data}
+              content={item.about}
+              salary_from={item.salery_from}
+              salary_type={item.currency}
+              id={item.id}
+              likes={item?.like}
+              onLike={null}
+              onClick={() =>
+                navigation.navigate("SearchScreenItem", { id: item.id })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<ListEmpty />}
+          refreshing={pending}
+          onRefresh={GET}
+        />
+      )}
     </Container>
   );
 };
