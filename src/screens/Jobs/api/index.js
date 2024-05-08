@@ -38,3 +38,39 @@ export const getData = async (pagination, setPending, setData) => {
     setPending(false);
   }
 };
+
+// CREATE
+export const createJob = async (setPending, body) => {
+  try {
+    setPending(true);
+    const response = await api.post(`job/create`, body);
+    return response;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setPending(false);
+  }
+};
+
+// UPDATE
+export const updateJob = async (setPending, id, body) => {
+  try {
+    setPending(true);
+    const response = await api.patch(`job/update/${id}`, body);
+    return response;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setPending(false);
+  }
+};
+
+// GET-ONE
+export const getOneJob = async (id) => {
+  try {
+    const response = await api.get(`job/one/${id}`);
+    return response;
+  } catch (err) {
+    console.error(err);
+  }
+};

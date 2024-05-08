@@ -70,6 +70,29 @@ export const JobItemCard = (props) => {
             {offered ? "Apply" : "Read more"}
           </Button>
         )}
+        {offered ? (
+          <Text
+            style={{
+              color: "green",
+              fontSize: 16,
+              textAlign: "center",
+              width: "100%",
+              marginBottom: 5,
+            }}
+          >
+            OFFERED
+          </Text>
+        ) : (
+          <Button
+            onPress={onClick}
+            style={{ borderRadius: 8, width: "100%" }}
+            mode="contained"
+            textColor={offered ? "green" : "crimson"}
+            buttonColor={!offered ? "#F8CECC" : "#D5E8D4"}
+          >
+            {offered ? "Apply" : "Read more"}
+          </Button>
+        )}
       </Card.Actions>
     </Card>
   );

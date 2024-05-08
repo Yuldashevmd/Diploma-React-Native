@@ -47,6 +47,7 @@ export const TabNavigator = () => {
               color={props.focused ? "crimson" : "grey"}
             />
           ),
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -63,6 +64,7 @@ export const TabNavigator = () => {
               color={props.focused ? "crimson" : "grey"}
             />
           ),
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -79,6 +81,7 @@ export const TabNavigator = () => {
               color={props.focused ? "crimson" : "grey"}
             />
           ),
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -95,6 +98,7 @@ export const TabNavigator = () => {
               color={props.focused ? "crimson" : "grey"}
             />
           ),
+          unmountOnBlur: true,
         }}
       />
     </Tab.Navigator>

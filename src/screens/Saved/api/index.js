@@ -1,16 +1,37 @@
-import { api } from "../../../apps/Helper/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASIC_URL } from "../../../apps/Helper/api";
 
 export const getData = async (pagination, setData, setPending) => {
   try {
+    const token = await AsyncStorage.getItem("access_token");
     setPending(true);
-    const response = await api.get(`like/all`, {
-      params: {
-        pageNumber: pagination.pageNumber,
-        pageSize: pagination.pageSize,
-      },
-    });
+    let res;
+    if (token === null) {
+      res = await fetch(
+        `${BASIC_URL}/like/all?${new URLSearchParams({
+          pageNumber: pagination.pageNumber,
+          pageSize: pagination.pageSize,
+        })}`
+      );
+    } else {
+      res = await fetch(
+        `${BASIC_URL}/like/all?${new URLSearchParams({
+          pageNumber: pagination.pageNumber,
+          pageSize: pagination.pageSize,
+        })}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
 
-    response.data.results && setData(response.data.results);
+    const response = await res.json();
+    if (response.status === 401) return { status: 401 };
+    response.data?.results && setData(response.data.results);
     return response.data;
   } catch (error) {
     console.error(error);

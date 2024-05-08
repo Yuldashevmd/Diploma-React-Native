@@ -12,6 +12,7 @@ export const signIn = async (body) => {
     const result = await res.json();
     return result;
   } catch (err) {
-    throw Error(err);
+    console.error(err);
+    return err;
   }
 };

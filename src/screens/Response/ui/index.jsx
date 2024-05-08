@@ -9,6 +9,8 @@ import { JobItemCard } from "../../../shared/ui/JobItemCard";
 import { useResponse } from "../model/hook";
 import { getData } from "../api";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
+import { NOTAUTH } from "../../Profile";
+import { useUserToken } from "../../../widgets/Signin/model/hook";
 
 const buttons = [
   {
@@ -52,6 +54,7 @@ export const ResponseScreen = ({ navigation }) => {
     pagination,
     setPagination,
   } = useResponse();
+  const { token } = useUserToken();
 
   // GET
   const GET = async () => {
@@ -63,6 +66,8 @@ export const ResponseScreen = ({ navigation }) => {
   useEffect(() => {
     GET();
   }, [type]);
+
+  if (!token) return <NOTAUTH />;
 
   return (
     <Container>
@@ -88,15 +93,15 @@ export const ResponseScreen = ({ navigation }) => {
           data={data}
           renderItem={({ item }) => (
             <JobItemCard
-              title={item.title}
+              title={item?.title}
               subtitle={Date.now()}
-              content={item.about}
+              content={item?.about}
               salary_from={item?.salery_from}
               salary_type={item?.currency}
-              id={item.id}
+              id={item?.id}
               likes={item?.likes}
               rejected={item?.answer === "rejected" ? true : false}
-              offered={item?.answer === "apply" ? true : false}
+              offered={item?.answer === "offer" ? true : false}
               onClick={() =>
                 navigation.navigate("SearchScreenItem", { id: item.id })
               }

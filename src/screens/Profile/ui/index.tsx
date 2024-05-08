@@ -2,7 +2,7 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { Avatar, Button, Divider, List } from "react-native-paper";
 import { MyJobCard } from "../../../shared/ui/MyJobCard";
-import { RefreshCcw } from "react-native-feather";
+import { Mail, Phone, RefreshCcw, User } from "react-native-feather";
 import { CvCard } from "../../../shared/ui/CvCard";
 import { useProfile } from "../model/hook";
 import { getData } from "../api";
@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUserToken } from "../../../widgets/Signin/model/hook";
+import { NOTAUTH } from "./notAuth";
 
 export const ProfileScreen = ({ navigation }) => {
   const { data, pending, setData, setPending } = useProfile();
@@ -18,22 +19,23 @@ export const ProfileScreen = ({ navigation }) => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem("access_token");
     setToken(null);
+    navigation.navigate("Search");
   };
 
   // GET
   const GET = async () => {
     const res = await getData(setData, setPending);
-    if (res.status === 401) navigation.navigate("Signin");
+    if (res?.status === 401) navigation.navigate("Signin");
   };
 
   // LOAD
   useEffect(() => {
-    !data && GET();
+    GET();
   }, []);
 
-  if (token === null) return navigation.navigate("Signin");
-
   if (pending) return <LoadingUI />;
+
+  if (!token) return <NOTAUTH />;
 
   return (
     <Container>
@@ -57,12 +59,46 @@ export const ProfileScreen = ({ navigation }) => {
             source={require("../../../../assets/favicon.png")}
             aria-label="User"
           />
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20 }}>{data?.name}</Text>
+          <View style={{ flex: 1, gap: 2 }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 5,
+              }}
+            >
+              <User color="#252525" width={20} height={20} />
+              <Text
+                style={{
+                  fontSize: 20,
+                }}
+              >
+                {data?.name}
+              </Text>
+            </View>
             <Text style={{ fontSize: 14, color: "grey" }}>
               {data?.occupation}
             </Text>
-            <Text style={{ fontSize: 14, color: "grey" }}>{data?.email}</Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "grey",
+              }}
+            >
+              {data?.email}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "green",
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Phone width={14} height={14} color={"grey"} /> {data?.phone}
+            </Text>
           </View>
         </View>
         <View>
@@ -83,19 +119,19 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
               Resumes:
             </Text>
-            {data?.resumes.map((item) => (
-              <View key={item.id}>
+            {data && data?.resumes[0] && (
+              <View key={data?.resumes[0].id}>
                 <CvCard
-                  title={item.title}
+                  title={data?.resumes[0].title}
                   subtitle={Intl.DateTimeFormat("ru").format(
-                    new Date(item.create_data) || Date.now()
+                    new Date(data?.resumes[0].create_data) || Date.now()
                   )}
-                  content={item.about}
-                  skills={item.skills}
-                  jobs={item.experinces}
+                  content={data?.resumes[0].about}
+                  skills={data?.resumes[0].skills}
+                  jobs={data?.resumes[0].experinces}
                 />
               </View>
-            ))}
+            )}
 
             <Button onPress={() => navigation.navigate("CV")}>Show all</Button>
           </View>
@@ -104,19 +140,20 @@ export const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
               Jobs:
             </Text>
-            {data?.my_jobs.map((item) => (
-              <View key={item.id}>
+            {data && data?.my_jobs[0] && (
+              <View key={data?.my_jobs[0].id}>
                 <MyJobCard
-                  title={item.title}
+                  title={data?.my_jobs[0].title}
                   subtitle={Intl.DateTimeFormat("ru").format(
-                    new Date(item.create_data) || Date.now()
+                    new Date(data?.my_jobs[0].create_data) || Date.now()
                   )}
-                  content={item.about}
-                  salary_from={item.salery_from}
-                  salary_type={item.currency}
+                  content={data?.my_jobs[0].about}
+                  salary_from={data?.my_jobs[0].salery_from}
+                  salary_type={data?.my_jobs[0].currency}
                 />
               </View>
-            ))}
+            )}
+
             <Button onPress={() => navigation.navigate("Jobs")}>
               Show all
             </Button>

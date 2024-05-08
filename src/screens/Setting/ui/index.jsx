@@ -3,6 +3,8 @@ import { Container } from "../../../shared/styles/global";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { Button, Surface, TextInput } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { getData, Update } from "../api";
 
 export const SettingScreen = ({ navigation }) => {
   const {
@@ -12,10 +14,32 @@ export const SettingScreen = ({ navigation }) => {
     reset,
   } = useForm();
 
-  const handleFinish = (values) => {
-    console.log(values, "values");
-    reset();
+  // GET
+  const GET = async () => {
+    const res = await getData();
+    reset({ ...res });
   };
+
+  // FINISH
+  const handleFinish = async (values) => {
+    const body = new FormData();
+    body.append("image_link", "");
+    body.append("name", values.name);
+    body.append("password", values.password);
+    body.append("email", values.email);
+    body.append("phone", values.phone);
+    body.append("occupation", values.occupation);
+
+    const res = await Update(body);
+    reset();
+    if (res?.status === 204) return navigation.navigate("Profile");
+    if (res?.status === 401) return navigation.navigate("Signin");
+  };
+
+  // LOAD
+  useEffect(() => {
+    GET();
+  }, []);
 
   return (
     <Container
@@ -54,7 +78,7 @@ export const SettingScreen = ({ navigation }) => {
                     value={value}
                   />
                 )}
-                name="full_name"
+                name="name"
                 rules={{ required: true }}
               />
 
@@ -122,25 +146,7 @@ export const SettingScreen = ({ navigation }) => {
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    outlineColor="lightgrey"
-                    mode="outlined"
-                    label={"Old password"}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
-                )}
-                name="old_password"
-                rules={{ required: true, minLength: 6, maxLength: 24 }}
-              />
-
-              {errors.old_password && (
-                <Text style={{ color: "red" }}>Old password must be 6-24</Text>
-              )}
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
+                    secureTextEntry
                     outlineColor="lightgrey"
                     mode="outlined"
                     label={"New password"}
@@ -149,11 +155,11 @@ export const SettingScreen = ({ navigation }) => {
                     value={value}
                   />
                 )}
-                name="new_password"
-                rules={{ required: true, minLength: 6, maxLength: 24 }}
+                name="password"
+                rules={{ required: true, minLength: 3, maxLength: 24 }}
               />
-              {errors.new_password && (
-                <Text style={{ color: "red" }}>Password must be 6-24</Text>
+              {errors.password && (
+                <Text style={{ color: "red" }}>Password must be 3-24</Text>
               )}
             </Surface>
           </View>

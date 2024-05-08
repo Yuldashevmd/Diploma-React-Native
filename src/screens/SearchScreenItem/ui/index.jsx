@@ -4,16 +4,22 @@ import { useEffect, useState } from "react";
 import { Heart, Mail, Phone, Send } from "react-native-feather";
 import { HeaderTextScreen } from "../../../shared/ui/HeaderTextScreen";
 import { SalaryText } from "../../../entities/SalaryText";
-import { ActivityIndicator, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { useSearchItem } from "../model/hook";
-import { handleLike, postResponse } from "../api";
+import { getData, handleLike, postResponse } from "../api";
 import { useUserToken } from "../../../widgets/Signin/model/hook";
+import { LoadingUI } from "../../../shared/ui/LoadingUi";
 
 export const SearchScreenItem = ({ navigation, route }) => {
   const { id } = route.params;
-  const { getSearchItem, searchItem, pending } = useSearchItem(id);
+  const { data, setData, pending, setPending } = useSearchItem(id);
   const [loading, setLoading] = useState(false);
   const { token } = useUserToken();
+  // GET
+  const GET = async () => {
+    const res = await getData(id, setPending, setData);
+    if (res?.status === 401) return navigation.navigate("Signin");
+  };
 
   // LIKE
   const onLike = async () => {
@@ -21,18 +27,20 @@ export const SearchScreenItem = ({ navigation, route }) => {
       navigation.navigate("Signin");
     } else {
       const body = {
-        like: searchItem?.like ? false : true,
+        like: data?.like ? false : true,
         job_id: id,
       };
       setLoading(true);
       const res = await handleLike(body);
       res.status === 401 && navigation.navigate("Signin");
-      res.status === 201 && getSearchItem(id);
+      res.status === 201 && GET();
       setLoading(false);
     }
   };
 
+  // LOAD
   useEffect(() => {
+    GET();
     navigation.setOptions({
       headerRight: () => (
         <Heart
@@ -40,10 +48,10 @@ export const SearchScreenItem = ({ navigation, route }) => {
           height={24}
           color="crimson"
           onPress={onLike}
-          fill={searchItem?.like ? "crimson" : "transparent"}
+          fill={data?.like ? "crimson" : "transparent"}
         />
       ),
-      title: searchItem?.title,
+      title: data?.title,
     });
   }, []);
 
@@ -53,21 +61,14 @@ export const SearchScreenItem = ({ navigation, route }) => {
       navigation.navigate("Signin");
     } else {
       setLoading(true);
-      const res = await postResponse(searchItem.id);
+      const res = await postResponse(data.id);
       res.status === 401 && navigation.navigate("Signin");
-      res.status === 201 && getSearchItem(id);
+      res.status === 201 && GET();
       setLoading(false);
     }
   };
 
-  if (pending)
-    return (
-      <ActivityIndicator
-        animating={pending}
-        color="crimson"
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      />
-    );
+  if (pending) return <LoadingUI />;
 
   return (
     <Container
@@ -83,15 +84,12 @@ export const SearchScreenItem = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
       >
         <HeaderTextScreen
-          title={searchItem?.title}
+          title={data?.title}
           subtitle={Intl.DateTimeFormat("en-GB").format(
-            new Date(searchItem?.create_data || Date.now())
+            new Date(data?.create_data || Date.now())
           )}
         />
-        <SalaryText
-          salary={searchItem?.salery_from}
-          salary_type={searchItem?.currency}
-        />
+        <SalaryText salary={data?.salery_from} salary_type={data?.currency} />
         <View
           style={{
             flexDirection: "row",
@@ -108,7 +106,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             buttonColor="#E1D5E7"
             textColor="#9673A6"
           >
-            {searchItem?.seen} people seen
+            {data?.seen} people seen
           </Button>
           <Button
             style={{ borderRadius: 8 }}
@@ -116,28 +114,28 @@ export const SearchScreenItem = ({ navigation, route }) => {
             buttonColor="#F8CECC"
             textColor="crimson"
           >
-            {searchItem?.rejects} people rejected
+            {data?.rejects} people rejected
           </Button>
         </View>
         <View aria-label="company" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Company:</Text>
-          <Text style={style.text}>{searchItem?.org_name}</Text>
+          <Text style={style.text}>{data?.org_name}</Text>
         </View>
-        <View aria-label="experience" style={{ marginVertical: 10, gap: 5 }}>
+        <View aria-label="expriece" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Experience:</Text>
-          <Text style={style.text}>{searchItem?.experience}</Text>
+          <Text style={style.text}>{data?.expriece}</Text>
         </View>
         <View aria-label="requirements" style={{ marginVertical: 10, gap: 8 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Requirements:</Text>
-          <Text>{searchItem?.requrements}</Text>
+          <Text>{data?.requrements}</Text>
         </View>
         <View aria-label="content" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Content:</Text>
-          <Text style={style.text}>{searchItem?.about}</Text>
+          <Text style={style.text}>{data?.about}</Text>
         </View>
         <View aria-label="address" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={{ fontWeight: "600", fontSize: 18 }}>Address:</Text>
-          <Text style={style.text}>{searchItem?.address}</Text>
+          <Text style={style.text}>{data?.address}</Text>
         </View>
         <View aria-label="contacts" style={{ marginVertical: 10, gap: 5 }}>
           <Text style={style.title}>Contacts:</Text>
@@ -149,7 +147,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Phone width={20} height={20} color="#252525" />
-            <Text style={style.text}>Phone: {searchItem?.phone}</Text>
+            <Text style={style.text}>Phone: {data?.phone}</Text>
           </View>
           <View
             style={{
@@ -159,7 +157,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Mail width={20} height={20} color="#252525" />
-            <Text style={style.text}>Email: {searchItem?.email}</Text>
+            <Text style={style.text}>Email: {data?.email}</Text>
           </View>
           <View
             style={{
@@ -169,14 +167,14 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Send width={20} height={20} color="#252525" />
-            <Text style={style.text}>Telegram: {searchItem?.telegram}</Text>
+            <Text style={style.text}>Telegram: {data?.telegram}</Text>
           </View>
         </View>
       </ScrollView>
 
       <Button
         loading={loading}
-        disabled={searchItem?.responded || loading}
+        disabled={!!data?.responses || loading}
         textColor="white"
         onPress={handleSendResponse}
         mode="contained"

@@ -29,6 +29,7 @@ export const StackNavigator = () => {
             color: "white",
           },
           headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
       <Stack.Screen name="CV" component={CV} />
@@ -42,9 +43,14 @@ export const StackNavigator = () => {
             color: "white",
           },
           headerTintColor: "white",
+          unmountOnBlur: true,
         }}
       />
-      <Stack.Screen name="Settings" component={SettingScreen} />
+      <Stack.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={{ unmountOnBlur: true }}
+      />
 
       {/* AUTH */}
       <Stack.Screen

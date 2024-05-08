@@ -3,20 +3,30 @@ import { BASIC_URL } from "../../../apps/Helper/api";
 
 export const getData = async (setData, setPending) => {
   try {
+    const token = await AsyncStorage.getItem("access_token");
     setPending(true);
-    const response = await fetch(`${BASIC_URL}/user/one`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${await AsyncStorage.getItem("access_token")}`,
-      },
-    });
-    const data = await response.json();
-    data && setData(data);
-    return data;
+    let response;
+    if (token === null) {
+      response = await fetch(`${BASIC_URL}/user/one`);
+      const data = await response.json();
+      data && setData(data.data);
+      return data;
+    } else {
+      response = await fetch(`${BASIC_URL}/user/one`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      data && setData(data);
+      return data;
+    }
   } catch (error) {
     console.error(error);
     if (error.response.status === 401) return { status: 401 };
+    return error;
   } finally {
     setPending(false);
   }

@@ -9,10 +9,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useJobs } from "../model/hook";
 import { deleteJob, getData } from "../api";
 import { useEffect } from "react";
+import { NOTAUTH } from "../../Profile";
+import { useUserToken } from "../../../widgets/Signin/model/hook";
 
 export const JobsScreen = ({ navigation }) => {
   const { data, pending, pagination, setPagination, setData, setPending } =
     useJobs();
+  const { token } = useUserToken();
 
   // GET
   const GET = async () => {
@@ -47,6 +50,8 @@ export const JobsScreen = ({ navigation }) => {
       { cancelable: true }
     );
   };
+
+  if (!token) return <NOTAUTH />;
 
   return (
     <Container>
@@ -87,7 +92,7 @@ export const JobsScreen = ({ navigation }) => {
         color="#fff"
         label="Create"
         icon={() => <Plus width={20} height={20} color={"white"} />}
-        onPress={() => navigation.navigate("JobScreenCrud")}
+        onPress={() => navigation.navigate("JobScreenCrud", { id: null })}
       />
     </Container>
   );

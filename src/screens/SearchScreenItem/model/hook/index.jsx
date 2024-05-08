@@ -1,18 +1,15 @@
-import { useEffect } from "react";
 import { useSearchItemSlicer } from "../Slicer";
 
 export const useSearchItem = (id) => {
-  const getSearchItem = useSearchItemSlicer((state) => state.getSearchItem);
   const pending = useSearchItemSlicer((state) => state.pending);
-  const searchItem = useSearchItemSlicer((state) => state.searchItem);
-
-  useEffect(() => {
-    getSearchItem(id);
-  }, []);
+  const data = useSearchItemSlicer((state) => state.data);
+  const setData = useSearchItemSlicer((state) => state.setData);
+  const setPending = useSearchItemSlicer((state) => state.setPending);
 
   return {
-    searchItem,
-    getSearchItem,
+    data,
+    setData,
+    setPending,
     pending,
   };
 };

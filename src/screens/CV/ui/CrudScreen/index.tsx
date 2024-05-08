@@ -9,10 +9,12 @@ import {
 } from "react-native";
 import { Button, Chip, TextInput } from "react-native-paper";
 import { Container } from "../../../../shared/styles/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCV } from "../../model/hook";
+import { createCV, getOneCV, updateCV } from "../../api";
 
 export const CVScreenCrud = ({ navigation, route }) => {
-  const { params } = route;
+  const { id } = route.params;
   const {
     control,
     handleSubmit,
@@ -20,13 +22,42 @@ export const CVScreenCrud = ({ navigation, route }) => {
     reset,
   } = useForm();
   const [salaryType, setSalaryType] = useState("sum");
+  const { pending, setPending } = useCV();
 
-  const handleFinish = (values) => {
-    console.log({ ...values, salary_type: salaryType }, "values");
-    reset();
-    setSalaryType("sum");
-    navigation.goBack();
+  // FINISH
+  const handleFinish = async (values) => {
+    let body = {
+      ...values,
+      currency: salaryType,
+    };
+    if (id) {
+      const res = await updateCV(setPending, id, body);
+      if (res.status === 204) {
+        reset();
+        setSalaryType("sum");
+        navigation.goBack();
+      }
+    } else {
+      const res = await createCV(setPending, body);
+      if (res.status === 201) {
+        reset();
+        setSalaryType("sum");
+        navigation.goBack();
+      }
+    }
   };
+
+  // LOAD
+  useEffect(() => {
+    if (id) {
+      getOneCV(id).then((res) => {
+        reset({
+          ...res.data,
+        });
+        setSalaryType(res.data.currency);
+      });
+    }
+  }, []);
 
   return (
     <Container>
@@ -54,6 +85,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                 rules={{ required: true, minLength: 3 }}
                 control={control}
                 name="title"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -81,6 +113,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                 rules={{ required: true, minLength: 5 }}
                 control={control}
                 name="skills"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -106,7 +139,8 @@ export const CVScreenCrud = ({ navigation, route }) => {
             </View>
             <Controller
               control={control}
-              name="jobs"
+              name="experinces"
+              disabled={pending}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
@@ -122,7 +156,8 @@ export const CVScreenCrud = ({ navigation, route }) => {
             />
             <Controller
               control={control}
-              name="salary_from"
+              name="salery_from"
+              disabled={pending}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
@@ -177,6 +212,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
             <Controller
               control={control}
               name="about"
+              disabled={pending}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
@@ -195,6 +231,8 @@ export const CVScreenCrud = ({ navigation, route }) => {
         </ScrollView>
         <SafeAreaView>
           <Button
+            loading={pending}
+            disabled={pending}
             onPress={handleSubmit(handleFinish)}
             mode="contained"
             buttonColor="#004C99"

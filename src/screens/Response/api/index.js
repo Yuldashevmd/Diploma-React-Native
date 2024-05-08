@@ -15,7 +15,7 @@ export const getData = async (sort, pagination, setPending, setData) => {
       }
     );
     const data = await response.json();
-    data?.results && setData(data.results.map((item) => item.responsed_job));
+    data?.data && setData(data.data);
     return data;
   } catch (error) {
     console.error(error);

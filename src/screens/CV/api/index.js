@@ -29,3 +29,39 @@ export const getData = async (pagination, setPending, setData) => {
     setPending(false);
   }
 };
+
+// CREATE
+export const createCV = async (setPending, body) => {
+  try {
+    setPending(true);
+    const response = await api.post(`Resume/create`, body);
+    return response;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setPending(false);
+  }
+};
+
+// UPDATE
+export const updateCV = async (setPending, id, body) => {
+  try {
+    setPending(true);
+    const response = await api.patch(`Resume/update/${id}`, body);
+    return response;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setPending(false);
+  }
+};
+
+// GET-ONE
+export const getOneCV = async (id) => {
+  try {
+    const response = await api.get(`Resume/one/${id}`);
+    return response;
+  } catch (err) {
+    console.error(err);
+  }
+};

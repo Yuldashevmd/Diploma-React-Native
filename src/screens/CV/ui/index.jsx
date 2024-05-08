@@ -89,7 +89,7 @@ export const CV = ({ navigation }) => {
           color="#fff"
           label="Create"
           icon={() => <Plus width={20} height={20} color={"white"} />}
-          onPress={() => navigation.navigate("CVScreenCrud")}
+          onPress={() => navigation.navigate("CVScreenCrud", { id: null })}
         />
       </SafeAreaView>
     </Container>

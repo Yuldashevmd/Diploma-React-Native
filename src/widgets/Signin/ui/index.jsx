@@ -25,6 +25,7 @@ export const SigninUI = ({ navigation }) => {
   } = useForm();
   const { setToken } = useUserToken();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // FINISH
   const handleFinish = async (values) => {
@@ -34,15 +35,19 @@ export const SigninUI = ({ navigation }) => {
       password: values.password,
     };
     const res = await signIn(body);
-    if (res) {
+    if (res.token) {
       setToken(res.token);
       await AsyncStorage.setItem("access_token", res.token);
       setTimeout(() => {
         navigation.navigate("Search");
       }, 1000);
+      reset();
+      setLoading(false);
+    } else {
+      setError(res.message);
+      reset();
+      setLoading(false);
     }
-    reset();
-    setLoading(false);
   };
 
   return (
@@ -66,6 +71,9 @@ export const SigninUI = ({ navigation }) => {
               <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign in</Text>
               <LogIn width={35} height={35} color={"crimson"} />
             </View>
+            {error && (
+              <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+            )}
             <Text style={style.label}>Login:</Text>
             <Controller
               control={control}

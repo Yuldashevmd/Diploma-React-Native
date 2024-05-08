@@ -7,10 +7,13 @@ import { useEffect } from "react";
 import { useSaved } from "../model/hook";
 import { getData } from "../api";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
+import { NOTAUTH } from "../../Profile";
+import { useUserToken } from "../../../widgets/Signin/model/hook";
 
 export const SavedScreen = ({ navigation }) => {
   const { data, setData, pagination, setPagination, pending, setPending } =
     useSaved();
+  const { token } = useUserToken();
 
   // GET
   const GET = async () => {
@@ -22,6 +25,8 @@ export const SavedScreen = ({ navigation }) => {
   useEffect(() => {
     !data && GET();
   }, []);
+
+  if (!token) return <NOTAUTH />;
 
   return (
     <Container>

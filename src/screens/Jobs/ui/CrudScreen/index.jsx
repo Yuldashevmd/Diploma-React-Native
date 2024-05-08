@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { KeyboardAvoidingView, ScrollView, Text, View } from "react-native";
 import { Container } from "../../../../shared/styles/global";
 import { Button, Chip, TextInput } from "react-native-paper";
+import { useJobs } from "../../model/hook";
+import { createJob, getOneJob, updateJob } from "../../api";
 
 export const JobsScreenCrud = ({ navigation, route }) => {
-  const { params } = route;
+  const { id } = route.params;
   const {
     control,
     handleSubmit,
@@ -13,13 +15,42 @@ export const JobsScreenCrud = ({ navigation, route }) => {
     reset,
   } = useForm();
   const [salaryType, setSalaryType] = useState("sum");
+  const { pending, setPending } = useJobs();
 
-  const handleFinish = (values) => {
-    console.log({ ...values, salary_type: salaryType }, "values");
-    reset();
-    setSalaryType("sum");
-    navigation.goBack();
+  // FINISH
+  const handleFinish = async (values) => {
+    let body = {
+      ...values,
+      currency: salaryType,
+    };
+    if (id) {
+      const res = await updateJob(setPending, id, body);
+      if (res.status === 204) {
+        reset();
+        setSalaryType("sum");
+        navigation.goBack();
+      }
+    } else {
+      const res = await createJob(setPending, body);
+      if (res.status === 201) {
+        reset();
+        setSalaryType("sum");
+        navigation.goBack();
+      }
+    }
   };
+
+  // LOAD
+  useEffect(() => {
+    if (id) {
+      getOneJob(id).then((res) => {
+        reset({
+          ...res.data,
+        });
+        setSalaryType(res.data.currency);
+      });
+    }
+  }, []);
 
   return (
     <Container>
@@ -48,6 +79,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                 rules={{ required: true, minLength: 3 }}
                 control={control}
                 name="title"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -72,9 +104,38 @@ export const JobsScreenCrud = ({ navigation, route }) => {
             </View>
             <View>
               <Controller
-                rules={{ required: true, minLength: 15 }}
+                rules={{ required: true, minLength: 3 }}
                 control={control}
-                name="requirements"
+                name="org_name"
+                disabled={pending}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    label="Organization name"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              {errors.org_name && (
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  field is required and must be at least 3 characters
+                </Text>
+              )}
+            </View>
+            <View>
+              <Controller
+                rules={{ required: true, minLength: 5 }}
+                control={control}
+                name="requrements"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -88,7 +149,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   />
                 )}
               />
-              {errors.requirements && (
+              {errors.requrements && (
                 <Text
                   style={{
                     color: "red",
@@ -98,9 +159,39 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                 </Text>
               )}
             </View>
+            <View>
+              <Controller
+                rules={{ required: true }}
+                control={control}
+                name="expriece"
+                disabled={pending}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    multiline
+                    label="Experience"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              {errors.expriece && (
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  field is required
+                </Text>
+              )}
+            </View>
             <Controller
               control={control}
-              name="salary_from"
+              name="salery_from"
+              disabled={pending}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
@@ -173,6 +264,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               <Controller
                 control={control}
                 name="address"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -188,6 +280,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               <Controller
                 control={control}
                 name="phone"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -204,6 +297,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               <Controller
                 control={control}
                 name="email"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -219,6 +313,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               <Controller
                 control={control}
                 name="telegram"
+                disabled={pending}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     outlineColor={"#ccc"}
@@ -235,6 +330,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
             <Controller
               control={control}
               name="about"
+              disabled={pending}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   outlineColor={"#ccc"}
@@ -252,6 +348,8 @@ export const JobsScreenCrud = ({ navigation, route }) => {
           </View>
         </ScrollView>
         <Button
+          loading={pending}
+          disabled={pending}
           onPress={handleSubmit(handleFinish)}
           mode="contained"
           buttonColor="crimson"
