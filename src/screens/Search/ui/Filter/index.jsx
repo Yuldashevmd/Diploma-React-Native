@@ -3,7 +3,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Filter } from "react-native-feather";
