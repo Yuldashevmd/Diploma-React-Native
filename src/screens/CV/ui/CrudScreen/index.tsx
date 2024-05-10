@@ -27,8 +27,12 @@ export const CVScreenCrud = ({ navigation, route }) => {
   // FINISH
   const handleFinish = async (values) => {
     let body = {
-      ...values,
-      currency: salaryType,
+      title: values.title.trim(),
+      skills: values.skills.trim(),
+      about: values.about.trim(),
+      salery_from: values.salery_from.trim(),
+      experinces: values.experinces.trim(),
+      currency: salaryType.trim(),
     };
     if (id) {
       const res = await updateCV(setPending, id, body);

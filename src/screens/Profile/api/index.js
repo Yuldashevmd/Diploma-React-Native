@@ -6,7 +6,7 @@ export const getData = async (setData, setPending) => {
     const token = await AsyncStorage.getItem("access_token");
     setPending(true);
     let response;
-    if (token === null) {
+    if (!token) {
       response = await fetch(`${BASIC_URL}/user/one`);
       const data = await response.json();
       data && setData(data.data);

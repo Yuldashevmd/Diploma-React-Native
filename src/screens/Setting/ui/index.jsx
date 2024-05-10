@@ -29,7 +29,6 @@ export const SettingScreen = ({ navigation }) => {
     body.append("email", values.email);
     body.append("phone", values.phone);
     body.append("occupation", values.occupation);
-
     const res = await Update(body);
     reset();
     if (res?.status === 204) return navigation.navigate("Profile");

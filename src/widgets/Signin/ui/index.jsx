@@ -31,8 +31,8 @@ export const SigninUI = ({ navigation }) => {
   const handleFinish = async (values) => {
     setLoading(true);
     const body = {
-      name: values.login,
-      password: values.password,
+      name: values.login.trim(),
+      password: values.password.trim(),
     };
     const res = await signIn(body);
     if (res.token) {

@@ -20,8 +20,17 @@ export const JobsScreenCrud = ({ navigation, route }) => {
   // FINISH
   const handleFinish = async (values) => {
     let body = {
-      ...values,
-      currency: salaryType,
+      title: values.title.trim(),
+      expriece: values.expriece.trim(),
+      org_name: values.org_name.trim(),
+      requrements: values.requrements.trim(),
+      salery_from: values.salery_from.trim(),
+      email: values.email.trim(),
+      about: values.about.trim(),
+      telegram: values.telegram.trim(),
+      address: values.address.trim(),
+      phone: values.phone.trim(),
+      currency: salaryType.trim(),
     };
     if (id) {
       const res = await updateJob(setPending, id, body);

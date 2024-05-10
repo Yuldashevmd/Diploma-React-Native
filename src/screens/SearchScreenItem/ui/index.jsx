@@ -23,7 +23,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
 
   // LIKE
   const onLike = async () => {
-    if (token === null) {
+    if (!token) {
       navigation.navigate("Signin");
     } else {
       const body = {
@@ -57,7 +57,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
 
   // SEND RESPONSE
   const handleSendResponse = async () => {
-    if (token === null) {
+    if (!token) {
       navigation.navigate("Signin");
     } else {
       setLoading(true);

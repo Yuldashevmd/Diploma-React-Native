@@ -6,7 +6,7 @@ export const getData = async (pagination, setData, setPending) => {
     const token = await AsyncStorage.getItem("access_token");
     setPending(true);
     let res;
-    if (token === null) {
+    if (!token) {
       res = await fetch(
         `${BASIC_URL}/like/all?${new URLSearchParams({
           pageNumber: pagination.pageNumber,

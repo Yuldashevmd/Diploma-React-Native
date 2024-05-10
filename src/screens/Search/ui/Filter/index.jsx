@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import { Filter } from "react-native-feather";
-import { Searchbar } from "react-native-paper";
+import { Button, Searchbar } from "react-native-paper";
 import { SearchScreenFilterModal } from "../ModalFilter";
 import { useDisclosure } from "../../../../shared/hooks/useDisclosure";
 import { useSearch } from "../../model/hook";
@@ -67,20 +67,18 @@ export const SearchScreenFilter = () => {
               borderRadius: 8,
             }}
           />
-          <TouchableOpacity
+          <Button
             onPress={open}
+            buttonColor="#fff"
             style={{
-              flex: 1,
               alignItems: "center",
               justifyContent: "center",
-              width: "100%",
               height: 55,
-              backgroundColor: "#fff",
               borderRadius: 8,
             }}
           >
             <Filter width={25} height={25} color={"crimson"} />
-          </TouchableOpacity>
+          </Button>
         </View>
         {/* MODAL */}
         <SearchScreenFilterModal open={isOpen} close={close} title={"Filter"} />
