@@ -9,20 +9,28 @@ import { useEffect } from "react";
 import { deleteResume, getData } from "../api";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
 import { useCV } from "../model/hook";
+import { Pagination } from "../../../entities/pagination";
 
 export const CV = ({ navigation }) => {
   const { data, setData, pending, setPending, pagination, setPagination } =
     useCV();
 
   // GET
-  const GET = async () => {
-    const res = await getData(pagination, setPending, setData);
+  const GET = async (newPagination) => {
+    const res = await getData(newPagination, setPending, setData);
     if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.pagination) {
+      setPagination({
+        pageNumber: res?.pagination?.currentPage,
+        pageSize: res?.pagination?.pageSize,
+        totalResults: res?.pagination?.totalItems,
+      });
+    }
   };
 
   // LOAD
   useEffect(() => {
-    !data && GET();
+    GET(pagination);
   }, []);
 
   // DELETE
@@ -65,7 +73,7 @@ export const CV = ({ navigation }) => {
                 new Date(item.create_data) || Date.now()
               )}
               skills={item.skills}
-              jobs={item.jobs}
+              jobs={item.experinces}
               content={item.about}
               id={item.id}
               onEdit={() =>
@@ -77,7 +85,8 @@ export const CV = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           ListEmptyComponent={<ListEmpty />}
           refreshing={pending}
-          onRefresh={GET}
+          onRefresh={() => GET(pagination)}
+          ListFooterComponent={<Pagination GET={GET} pagination={pagination} />}
         />
       )}
       <SafeAreaView>

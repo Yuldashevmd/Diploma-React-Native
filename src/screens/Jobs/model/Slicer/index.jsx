@@ -6,8 +6,10 @@ export const jobsSlicer = create((set) => ({
   pagination: {
     pageNumber: 1,
     pageSize: 10,
+    totalResults: 0,
   },
-  setPagination: (pagination) => set({ pagination }),
+  setPagination: (newPagination) =>
+    set((state) => ({ ...state, pagination: newPagination })),
   setData: (data) => set({ data }),
   setPending: (pending) => set({ pending }),
 }));

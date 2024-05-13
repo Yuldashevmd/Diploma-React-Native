@@ -27,7 +27,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
       navigation.navigate("Signin");
     } else {
       const body = {
-        like: data?.like ? false : true,
+        like: data?.likes?.like ? false : true,
         job_id: id,
       };
       setLoading(true);
@@ -41,6 +41,10 @@ export const SearchScreenItem = ({ navigation, route }) => {
   // LOAD
   useEffect(() => {
     GET();
+  }, []);
+
+  // WATCH-LIKE
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Heart
@@ -48,12 +52,12 @@ export const SearchScreenItem = ({ navigation, route }) => {
           height={24}
           color="crimson"
           onPress={onLike}
-          fill={data?.like ? "crimson" : "transparent"}
+          fill={token && data?.likes?.like ? "crimson" : "transparent"}
         />
       ),
       title: data?.title,
     });
-  }, []);
+  }, [data?.likes?.like]);
 
   // SEND RESPONSE
   const handleSendResponse = async () => {

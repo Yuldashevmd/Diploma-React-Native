@@ -6,8 +6,10 @@ export const useCVSlice = create((set) => ({
   pagination: {
     pageNumber: 1,
     pageSize: 10,
+    totalResults: 0,
   },
+  setPagination: (newPagination) =>
+    set((state) => ({ ...state, pagination: newPagination })),
   setData: (data) => set({ data }),
-  setPagination: (pagination) => set({ pagination }),
   setPending: (pending) => set({ pending }),
 }));

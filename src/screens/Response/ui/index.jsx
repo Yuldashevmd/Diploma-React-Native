@@ -11,6 +11,7 @@ import { getData } from "../api";
 import { LoadingUI } from "../../../shared/ui/LoadingUi";
 import { NOTAUTH } from "../../Profile";
 import { useUserToken } from "../../../widgets/Signin/model/hook";
+import { Pagination } from "../../../entities/pagination";
 
 const buttons = [
   {
@@ -57,14 +58,22 @@ export const ResponseScreen = ({ navigation }) => {
   const { token } = useUserToken();
 
   // GET
-  const GET = async () => {
-    const res = await getData(type, pagination, setPending, setData);
+  const GET = async (newPagination) => {
+    const res = await getData(type, newPagination, setPending, setData);
     if (res?.status === 401) return navigation.navigate("Signin");
+
+    if (res?.pagination) {
+      setPagination({
+        pageNumber: res?.pagination?.currentPage,
+        pageSize: res?.pagination?.pageSize,
+        totalResults: res?.pagination?.totalItems,
+      });
+    }
   };
 
   // LOAD
   useEffect(() => {
-    GET();
+    GET(pagination);
   }, [type]);
 
   if (!token) return <NOTAUTH />;
@@ -110,7 +119,8 @@ export const ResponseScreen = ({ navigation }) => {
           keyExtractor={(_, index) => index}
           ListEmptyComponent={<ListEmpty />}
           refreshing={pending}
-          onRefresh={GET}
+          onRefresh={() => GET(pagination)}
+          ListFooterComponent={<Pagination GET={GET} pagination={pagination} />}
         />
       )}
     </Container>

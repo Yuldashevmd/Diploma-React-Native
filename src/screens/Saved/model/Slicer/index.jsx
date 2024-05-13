@@ -5,9 +5,11 @@ export const savedUserSlice = create((set) => ({
   pagination: {
     pageNumber: 1,
     pageSize: 10,
+    totalResults: 0,
   },
+  setPagination: (newPagination) =>
+    set((state) => ({ ...state, pagination: newPagination })),
   pending: false,
-  setPagination: (pagination) => set({ pagination }),
   setPending: (pending) => set({ pending }),
   setData: (data) => set({ data }),
 }));
