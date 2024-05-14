@@ -47,7 +47,7 @@ export const JobItemCard = (props) => {
         </Text>
       </Card.Content>
       <Card.Actions style={{ marginTop: 10, marginBottom: 5 }}>
-        {rejected ? (
+        {rejected && (
           <Text
             style={{
               color: "red",
@@ -59,18 +59,8 @@ export const JobItemCard = (props) => {
           >
             REJECTED
           </Text>
-        ) : (
-          <Button
-            onPress={onClick}
-            style={{ borderRadius: 8, width: "100%" }}
-            mode="contained"
-            textColor={offered ? "green" : "crimson"}
-            buttonColor={!offered ? "#F8CECC" : "#D5E8D4"}
-          >
-            {offered ? "Apply" : "Read more"}
-          </Button>
         )}
-        {offered ? (
+        {offered && (
           <Text
             style={{
               color: "green",
@@ -82,7 +72,8 @@ export const JobItemCard = (props) => {
           >
             OFFERED
           </Text>
-        ) : (
+        )}
+        {!rejected && !offered && (
           <Button
             onPress={onClick}
             style={{ borderRadius: 8, width: "100%" }}

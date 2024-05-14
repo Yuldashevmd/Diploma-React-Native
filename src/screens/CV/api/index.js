@@ -19,7 +19,7 @@ export const getData = async (pagination, setPending, setData) => {
       },
     });
     const data = await response.json();
-    data && setData(data);
+    data && setData(data.results);
 
     return data;
   } catch (error) {

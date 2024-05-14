@@ -15,7 +15,7 @@ export const getData = async (sort, pagination, setPending, setData) => {
       }
     );
     const data = await response.json();
-    data?.data && setData(data.data);
+    data?.results && setData(data?.results);
     return data;
   } catch (error) {
     console.error(error);

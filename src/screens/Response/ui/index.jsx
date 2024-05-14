@@ -26,8 +26,8 @@ const buttons = [
 
   {
     id: 2,
-    value: "offered",
-    label: "Offered",
+    value: "offer",
+    label: "Offer",
     accessibilityLabel: "Offered",
     style: { borderColor: "lightgrey", backgroundColor: "#fff" },
     checkedColor: "crimson",
@@ -103,7 +103,7 @@ export const ResponseScreen = ({ navigation }) => {
           renderItem={({ item }) => (
             <JobItemCard
               title={item?.title}
-              subtitle={Date.now()}
+              subtitle={item?.create_data}
               content={item?.about}
               salary_from={item?.salery_from}
               salary_type={item?.currency}
@@ -120,7 +120,9 @@ export const ResponseScreen = ({ navigation }) => {
           ListEmptyComponent={<ListEmpty />}
           refreshing={pending}
           onRefresh={() => GET(pagination)}
-          ListFooterComponent={<Pagination GET={GET} pagination={pagination} />}
+          ListFooterComponent={
+            data?.length > 0 && <Pagination GET={GET} pagination={pagination} />
+          }
         />
       )}
     </Container>

@@ -102,7 +102,9 @@ export const SearchScreen = ({ navigation }) => {
           ListEmptyComponent={<ListEmpty />}
           refreshing={pending}
           onRefresh={() => GET(pagination)}
-          ListFooterComponent={<Pagination GET={GET} pagination={pagination} />}
+          ListFooterComponent={
+            data?.length > 0 && <Pagination GET={GET} pagination={pagination} />
+          }
         />
       )}
     </Container>

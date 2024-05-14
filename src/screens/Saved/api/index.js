@@ -31,8 +31,9 @@ export const getData = async (pagination, setData, setPending) => {
 
     const response = await res.json();
     if (response.status === 401) return { status: 401 };
-    response.data?.results && setData(response.data.results);
-    return response.data;
+    response?.results &&
+      setData(response?.results.map((item) => item?.JobsLiked));
+    return response;
   } catch (error) {
     console.error(error);
     if (error.response.status === 401) return { status: 401 };

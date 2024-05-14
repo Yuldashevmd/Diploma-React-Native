@@ -55,7 +55,7 @@ export const SavedScreen = ({ navigation }) => {
           renderItem={({ item }) => (
             <JobItemCard
               title={item.title}
-              subtitle={Intl.DateTimeFormat("ru").format(item.create_data)}
+              subtitle={item.create_data}
               content={item.about}
               salary_from={item.salery_from}
               salary_type={item.currency}
@@ -70,7 +70,9 @@ export const SavedScreen = ({ navigation }) => {
           ListEmptyComponent={<ListEmpty />}
           refreshing={pending}
           onRefresh={() => GET(pagination)}
-          ListFooterComponent={<Pagination GET={GET} pagination={pagination} />}
+          ListFooterComponent={
+            data?.length > 0 && <Pagination GET={GET} pagination={pagination} />
+          }
         />
       )}
     </Container>

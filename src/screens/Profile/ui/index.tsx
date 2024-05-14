@@ -2,7 +2,7 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Container } from "../../../shared/styles/global";
 import { Avatar, Button, Divider, List } from "react-native-paper";
 import { MyJobCard } from "../../../shared/ui/MyJobCard";
-import { Mail, Phone, RefreshCcw, User } from "react-native-feather";
+import { Phone, RefreshCcw, User } from "react-native-feather";
 import { CvCard } from "../../../shared/ui/CvCard";
 import { useProfile } from "../model/hook";
 import { getData } from "../api";
@@ -132,8 +132,34 @@ export const ProfileScreen = ({ navigation }) => {
                 />
               </View>
             )}
-
-            <Button onPress={() => navigation.navigate("CV")}>Show all</Button>
+            {data?.resumes?.length > 0 ? (
+              <Button onPress={() => navigation.navigate("CV")}>
+                Show all
+              </Button>
+            ) : (
+              <>
+                <Text
+                  style={{
+                    color: "#c44d1d",
+                    textAlign: "center",
+                    fontSize: 18,
+                    marginVertical: 10,
+                  }}
+                >
+                  No CV's found!
+                </Text>
+                <Button
+                  onPress={() =>
+                    navigation.navigate("CVScreenCrud", { id: null })
+                  }
+                  style={{ borderRadius: 8 }}
+                  buttonColor="#c44d1d"
+                  textColor="white"
+                >
+                  Create CV
+                </Button>
+              </>
+            )}
           </View>
           <Divider />
           <View aria-label="profile-resume-part" style={{ marginVertical: 10 }}>
@@ -154,9 +180,34 @@ export const ProfileScreen = ({ navigation }) => {
               </View>
             )}
 
-            <Button onPress={() => navigation.navigate("Jobs")}>
-              Show all
-            </Button>
+            {data?.my_jobs?.length > 0 ? (
+              <Button onPress={() => navigation.navigate("Jobs")}>
+                Show all
+              </Button>
+            ) : (
+              <>
+                <Text
+                  style={{
+                    color: "#c44d1d",
+                    textAlign: "center",
+                    fontSize: 18,
+                    marginVertical: 10,
+                  }}
+                >
+                  No Jobs found!
+                </Text>
+                <Button
+                  onPress={() =>
+                    navigation.navigate("JobScreenCrud", { id: null })
+                  }
+                  style={{ borderRadius: 8 }}
+                  buttonColor="#c44d1d"
+                  textColor="white"
+                >
+                  Create Job
+                </Button>
+              </>
+            )}
           </View>
           <Divider />
           <View
