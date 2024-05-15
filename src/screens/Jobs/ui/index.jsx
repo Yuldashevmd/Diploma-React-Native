@@ -8,10 +8,15 @@ import { Plus } from "react-native-feather";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useJobs } from "../model/hook";
 import { deleteJob, getData } from "../api";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { NOTAUTH } from "../../Profile";
 import { useUserToken } from "../../../widgets/Signin/model/hook";
 import { Pagination } from "../../../entities/pagination";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 export const JobsScreen = ({ navigation }) => {
   const { data, pending, pagination, setPagination, setData, setPending } =
@@ -30,6 +35,11 @@ export const JobsScreen = ({ navigation }) => {
       });
     }
   };
+
+  // REFETCH
+  const refetch = useCallback((value) => {
+    value && GET(pagination);
+  }, []);
 
   // LOAD
   useEffect(() => {
@@ -83,7 +93,9 @@ export const JobsScreen = ({ navigation }) => {
             salary_from={item.salery_from}
             salary_type={item.currency}
             id={item.id}
-            onEdit={() => navigation.navigate("JobScreenCrud", { id: item.id })}
+            onEdit={() =>
+              navigation.navigate("JobScreenCrud", { id: item.id, refetch })
+            }
             onDelete={() => handleDelete(item.id)}
           />
         )}
@@ -103,7 +115,9 @@ export const JobsScreen = ({ navigation }) => {
         color="#fff"
         label="Create"
         icon={() => <Plus width={20} height={20} color={"white"} />}
-        onPress={() => navigation.navigate("JobScreenCrud", { id: null })}
+        onPress={() =>
+          navigation.navigate("JobScreenCrud", { id: null, refetch })
+        }
       />
     </Container>
   );

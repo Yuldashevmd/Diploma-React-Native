@@ -8,6 +8,7 @@ import { createJob, getOneJob, updateJob } from "../../api";
 
 export const JobsScreenCrud = ({ navigation, route }) => {
   const { id } = route.params;
+  const { refetch } = route.params;
   const {
     control,
     handleSubmit,
@@ -37,6 +38,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
       if (res.status === 204) {
         reset();
         setSalaryType("sum");
+        refetch(true);
         navigation.goBack();
       }
     } else {
@@ -44,6 +46,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
       if (res.status === 201) {
         reset();
         setSalaryType("sum");
+        refetch(true);
         navigation.goBack();
       }
     }
@@ -164,7 +167,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 15 characters
+                  field is required and must be at least 5 characters
                 </Text>
               )}
             </View>
@@ -193,11 +196,12 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required
+                  experience is required
                 </Text>
               )}
             </View>
             <Controller
+              rules={{ required: true }}
               control={control}
               name="salery_from"
               disabled={pending}
@@ -215,6 +219,15 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                 />
               )}
             />
+            {errors.salery_from && (
+              <Text
+                style={{
+                  color: "red",
+                }}
+              >
+                salary is required
+              </Text>
+            )}
             <View
               style={{
                 flexDirection: "row",
@@ -270,90 +283,150 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               >
                 Contacts:
               </Text>
-              <Controller
-                control={control}
-                name="address"
-                disabled={pending}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor={"#ccc"}
-                    activeOutlineColor="crimson"
-                    mode="outlined"
-                    label="Address"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="phone"
-                disabled={pending}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor={"#ccc"}
-                    activeOutlineColor="crimson"
-                    mode="outlined"
-                    keyboardType="phone-pad"
-                    label="Phone"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="email"
-                disabled={pending}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor={"#ccc"}
-                    activeOutlineColor="crimson"
-                    mode="outlined"
-                    label="Email"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="telegram"
-                disabled={pending}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor={"#ccc"}
-                    activeOutlineColor="crimson"
-                    mode="outlined"
-                    label="Telegram"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-              />
-            </View>
-            <Controller
-              control={control}
-              name="about"
-              disabled={pending}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  outlineColor={"#ccc"}
-                  activeOutlineColor="crimson"
-                  mode="outlined"
-                  label="About me"
-                  value={value}
-                  multiline
-                  numberOfLines={10}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
+              <View>
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  name="address"
+                  disabled={pending}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor={"#ccc"}
+                      activeOutlineColor="crimson"
+                      mode="outlined"
+                      label="Address"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  )}
                 />
+                {errors.address && (
+                  <Text
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    address is required
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  name="phone"
+                  disabled={pending}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor={"#ccc"}
+                      activeOutlineColor="crimson"
+                      mode="outlined"
+                      keyboardType="phone-pad"
+                      label="Phone"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  )}
+                />
+                {errors.phone && (
+                  <Text
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    phone is required
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  name="email"
+                  disabled={pending}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor={"#ccc"}
+                      activeOutlineColor="crimson"
+                      mode="outlined"
+                      label="Email"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  )}
+                />
+                {errors.email && (
+                  <Text
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    email is required
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  name="telegram"
+                  disabled={pending}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor={"#ccc"}
+                      activeOutlineColor="crimson"
+                      mode="outlined"
+                      label="Telegram"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  )}
+                />
+                {errors.telegram && (
+                  <Text
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    telegram is required
+                  </Text>
+                )}
+              </View>
+            </View>
+            <View>
+              <Controller
+                rules={{ required: true }}
+                control={control}
+                name="about"
+                disabled={pending}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="crimson"
+                    mode="outlined"
+                    label="About me"
+                    value={value}
+                    multiline
+                    numberOfLines={10}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              {errors.about && (
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  about is required
+                </Text>
               )}
-            />
+            </View>
           </View>
         </ScrollView>
         <Button
@@ -364,13 +437,9 @@ export const JobsScreenCrud = ({ navigation, route }) => {
           buttonColor="crimson"
           icon={"content-save"}
           style={{
-            height: 50,
-            marginBottom: 10,
             width: "100%",
+            marginBottom: 10,
             borderRadius: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
           }}
         >
           Save

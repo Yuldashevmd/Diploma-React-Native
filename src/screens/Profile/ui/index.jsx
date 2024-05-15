@@ -28,6 +28,11 @@ export const ProfileScreen = ({ navigation }) => {
     if (res?.status === 401) navigation.navigate("Signin");
   };
 
+  // REFETCH
+  const refetch = (value) => {
+    value && GET();
+  };
+
   // LOAD
   useEffect(() => {
     GET();
@@ -150,7 +155,7 @@ export const ProfileScreen = ({ navigation }) => {
                 </Text>
                 <Button
                   onPress={() =>
-                    navigation.navigate("CVScreenCrud", { id: null })
+                    navigation.navigate("CVScreenCrud", { id: null, refetch })
                   }
                   style={{ borderRadius: 8 }}
                   buttonColor="#c44d1d"
@@ -198,7 +203,7 @@ export const ProfileScreen = ({ navigation }) => {
                 </Text>
                 <Button
                   onPress={() =>
-                    navigation.navigate("JobScreenCrud", { id: null })
+                    navigation.navigate("JobScreenCrud", { id: null, refetch })
                   }
                   style={{ borderRadius: 8 }}
                   buttonColor="#c44d1d"
@@ -227,17 +232,17 @@ export const ProfileScreen = ({ navigation }) => {
               <List.Item
                 title="Setting"
                 left={(props) => <List.Icon {...props} icon="cog" />}
-                onPress={() => navigation.navigate("Settings")}
+                onPress={() => navigation.navigate("Settings", { refetch })}
               />
               <List.Item
                 title="About"
                 left={(props) => <List.Icon {...props} icon="information" />}
-                onPress={() => console.log("setting clicked")}
+                onPress={() => navigation.navigate("About")}
               />
               <List.Item
                 title="Help"
                 left={(props) => <List.Icon {...props} icon={"help"} />}
-                onPress={() => console.log("setting clicked")}
+                onPress={() => navigation.navigate("Help")}
               />
               <List.Item
                 title="Exit"

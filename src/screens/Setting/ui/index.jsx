@@ -6,13 +6,14 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { getData, Update } from "../api";
 
-export const SettingScreen = ({ navigation }) => {
+export const SettingScreen = ({ route, navigation }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+  const { refetch } = route.params;
 
   // GET
   const GET = async () => {
@@ -31,7 +32,10 @@ export const SettingScreen = ({ navigation }) => {
     body.append("occupation", values.occupation);
     const res = await Update(body);
     reset();
-    if (res?.status === 204) return navigation.navigate("Profile");
+    if (res?.status === 204) {
+      refetch(true);
+      navigation.goBack();
+    }
     if (res?.status === 401) return navigation.navigate("Signin");
   };
 
@@ -65,73 +69,89 @@ export const SettingScreen = ({ navigation }) => {
               <Text style={{ fontSize: 20, fontWeight: 600, color: "#454545" }}>
                 Info:
               </Text>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor="lightgrey"
-                    mode="outlined"
-                    label={"Full name"}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
+              <View>
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor="lightgrey"
+                      mode="outlined"
+                      label={"Full name"}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="name"
+                />
+                {errors.name && (
+                  <Text style={{ color: "red" }}>Name is required</Text>
                 )}
-                name="name"
-                rules={{ required: true }}
-              />
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor="lightgrey"
-                    mode="outlined"
-                    label={"Email"}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor="lightgrey"
+                      mode="outlined"
+                      label={"Email"}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="email"
+                  rules={{ required: true }}
+                />
+                {errors.email && (
+                  <Text style={{ color: "red" }}>Email is not valid</Text>
                 )}
-                name="email"
-                rules={{ required: true }}
-              />
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor="lightgrey"
-                    mode="outlined"
-                    keyboardType={"phone-pad"}
-                    label={"Phone"}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor="lightgrey"
+                      mode="outlined"
+                      keyboardType={"phone-pad"}
+                      label={"Phone"}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="phone"
+                  rules={{ required: true, minLength: 11, maxLength: 14 }}
+                />
+                {errors.phone && (
+                  <Text style={{ color: "red" }}>
+                    Phone number is not valid, min 11, max 14
+                  </Text>
                 )}
-                name="phone"
-                rules={{ required: true, minLength: 11, maxLength: 14 }}
-              />
-              {errors.phone && (
-                <Text style={{ color: "red" }}>Phone number is not valid</Text>
-              )}
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    outlineColor="lightgrey"
-                    mode="outlined"
-                    label={"Occupation"}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor="lightgrey"
+                      mode="outlined"
+                      label={"Occupation"}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="occupation"
+                  rules={{ required: true }}
+                />
+                {errors.occupation && (
+                  <Text style={{ color: "red" }}>Occupation is required</Text>
                 )}
-                name="occupation"
-                rules={{ required: true }}
-              />
+              </View>
             </Surface>
 
             <Surface
@@ -141,25 +161,27 @@ export const SettingScreen = ({ navigation }) => {
               <Text style={{ fontSize: 20, fontWeight: 600, color: "#454545" }}>
                 Password:
               </Text>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    secureTextEntry
-                    outlineColor="lightgrey"
-                    mode="outlined"
-                    label={"New password"}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      secureTextEntry
+                      outlineColor="lightgrey"
+                      mode="outlined"
+                      label={"New password"}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="password"
+                  rules={{ required: true, minLength: 3, maxLength: 24 }}
+                />
+                {errors.password && (
+                  <Text style={{ color: "red" }}>Password must be 3-24</Text>
                 )}
-                name="password"
-                rules={{ required: true, minLength: 3, maxLength: 24 }}
-              />
-              {errors.password && (
-                <Text style={{ color: "red" }}>Password must be 3-24</Text>
-              )}
+              </View>
             </Surface>
           </View>
         </ScrollView>
@@ -169,13 +191,9 @@ export const SettingScreen = ({ navigation }) => {
           buttonColor="crimson"
           icon={"content-save"}
           style={{
-            height: 50,
             marginBottom: 10,
             width: "100%",
             borderRadius: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
           }}
         >
           Save

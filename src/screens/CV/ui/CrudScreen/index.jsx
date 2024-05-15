@@ -15,6 +15,7 @@ import { createCV, getOneCV, updateCV } from "../../api";
 
 export const CVScreenCrud = ({ navigation, route }) => {
   const { id } = route.params;
+  const { refetch } = route.params;
   const {
     control,
     handleSubmit,
@@ -39,6 +40,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
       if (res.status === 204) {
         reset();
         setSalaryType("sum");
+        refetch(true);
         navigation.goBack();
       }
     } else {
@@ -46,6 +48,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
       if (res.status === 201) {
         reset();
         setSalaryType("sum");
+        refetch(true);
         navigation.goBack();
       }
     }
@@ -108,13 +111,13 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 3 characters
+                  title is required and must be at least 3 characters
                 </Text>
               )}
             </View>
             <View>
               <Controller
-                rules={{ required: true, minLength: 5 }}
+                rules={{ required: true, minLength: 3 }}
                 control={control}
                 name="skills"
                 disabled={pending}
@@ -137,45 +140,73 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 5 characters
+                  skills is required and must be at least 3 characters
                 </Text>
               )}
             </View>
-            <Controller
-              control={control}
-              name="experinces"
-              disabled={pending}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  outlineColor={"#ccc"}
-                  activeOutlineColor="#004C99"
-                  mode="outlined"
-                  multiline
-                  label="Experience"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
+            <View>
+              <Controller
+                rules={{ required: true }}
+                control={control}
+                name="experinces"
+                disabled={pending}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="#004C99"
+                    mode="outlined"
+                    multiline
+                    label="Experience"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              {errors.experinces && (
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  experinces is required
+                </Text>
               )}
-            />
-            <Controller
-              control={control}
-              name="salery_from"
-              disabled={pending}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  outlineColor={"#ccc"}
-                  activeOutlineColor="#004C99"
-                  mode="outlined"
-                  multiline
-                  label="Salary from"
-                  keyboardType="numeric"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
+            </View>
+            <View>
+              <Controller
+                rules={{
+                  required: true,
+                  pattern: /^[0-9]*$/,
+                  valueType: "number",
+                }}
+                control={control}
+                name="salery_from"
+                disabled={pending}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="#004C99"
+                    mode="outlined"
+                    multiline
+                    label="Salary from"
+                    keyboardType="numeric"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              {errors.salery_from && (
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  salary is required and must be number
+                </Text>
               )}
-            />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -213,24 +244,36 @@ export const CVScreenCrud = ({ navigation, route }) => {
                 Dollar
               </Chip>
             </View>
-            <Controller
-              control={control}
-              name="about"
-              disabled={pending}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  outlineColor={"#ccc"}
-                  activeOutlineColor="#004C99"
-                  mode="outlined"
-                  multiline
-                  label="About me"
-                  numberOfLines={10}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
+            <View>
+              <Controller
+                rules={{ required: true }}
+                control={control}
+                name="about"
+                disabled={pending}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    outlineColor={"#ccc"}
+                    activeOutlineColor="#004C99"
+                    mode="outlined"
+                    multiline
+                    label="About me"
+                    numberOfLines={10}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              {errors.about && (
+                <Text
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  about is required
+                </Text>
               )}
-            />
+            </View>
           </View>
         </ScrollView>
         <SafeAreaView>
@@ -242,13 +285,9 @@ export const CVScreenCrud = ({ navigation, route }) => {
             buttonColor="#004C99"
             icon={"content-save"}
             style={{
-              height: 50,
               marginBottom: 10,
               width: "100%",
               borderRadius: 8,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
             }}
           >
             Save

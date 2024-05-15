@@ -7,6 +7,8 @@ import { JobsScreenCrud } from "../../../screens/Jobs";
 import { CV } from "../../../screens/CV";
 import { CVScreenCrud } from "../../../screens/CV/ui/CrudScreen";
 import { SettingScreen } from "../../../screens/Setting";
+import { About } from "../../../screens/About";
+import { Help } from "../../../screens/Help";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +65,8 @@ export const StackNavigator = () => {
         component={Signup}
         // options={{ headerShown: false }}
       />
+      <Stack.Screen name="About" component={About} />
+      <Stack.Screen name="Help" component={Help} />
     </Stack.Navigator>
   );
 };

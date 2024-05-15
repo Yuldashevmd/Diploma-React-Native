@@ -27,6 +27,10 @@ export const CV = ({ navigation }) => {
       });
     }
   };
+  // REFETCH
+  const refetch = (value) => {
+    value && GET();
+  };
 
   // LOAD
   useEffect(() => {
@@ -77,7 +81,7 @@ export const CV = ({ navigation }) => {
               content={item.about}
               id={item.id}
               onEdit={() =>
-                navigation.navigate("CVScreenCrud", { id: item.id })
+                navigation.navigate("CVScreenCrud", { id: item.id, refetch })
               }
               onDelete={() => handleDelete(item.id)}
             />
@@ -100,7 +104,9 @@ export const CV = ({ navigation }) => {
           color="#fff"
           label="Create"
           icon={() => <Plus width={20} height={20} color={"white"} />}
-          onPress={() => navigation.navigate("CVScreenCrud", { id: null })}
+          onPress={() =>
+            navigation.navigate("CVScreenCrud", { id: null, refetch })
+          }
         />
       </SafeAreaView>
     </Container>
