@@ -33,7 +33,7 @@ export const SignupUI = ({ navigation }) => {
     const res = await SignupApi(body);
     if (res.token) {
       setTimeout(() => {
-        navigation.navigate("Signin");
+        navigation.navigate("Вход");
       }, 1000);
 
       setResMessage("Successfully created");
@@ -64,14 +64,16 @@ export const SignupUI = ({ navigation }) => {
             >
               <User width={35} height={35} color={"#db332c"} />
 
-              <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign up</Text>
+              <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                Регистрация
+              </Text>
             </View>
             {resMessage && (
               <Text style={{ color: "crimson", textAlign: "center" }}>
                 {resMessage}
               </Text>
             )}
-            <Text style={style.label}>Login:</Text>
+            <Text style={style.label}>Логин:</Text>
             <Controller
               control={control}
               name="login"
@@ -81,17 +83,17 @@ export const SignupUI = ({ navigation }) => {
                   value={value}
                   style={style.input}
                   onBlur={onBlur}
-                  placeholder="Create login or phone number"
+                  placeholder="Введите логин или телефон"
                   onChangeText={onChange}
                 />
               )}
             />
             {errors.login && (
               <Text style={{ color: "red" }}>
-                Please enter login or phone number
+                Логин должен содержать не менее 3 символов
               </Text>
             )}
-            <Text style={style.label}>Password:</Text>
+            <Text style={style.label}>Пароль:</Text>
             <Controller
               control={control}
               name="password"
@@ -101,7 +103,7 @@ export const SignupUI = ({ navigation }) => {
                   value={value}
                   style={style.input}
                   onBlur={onBlur}
-                  placeholder="Create password"
+                  placeholder="Введите пароль"
                   onChangeText={onChange}
                   secureTextEntry={true}
                 />
@@ -109,7 +111,7 @@ export const SignupUI = ({ navigation }) => {
             />
             {errors.password && (
               <Text style={{ color: "red" }}>
-                Password should be at least 6 characters
+                Пароль должен содержать не менее 3 символов
               </Text>
             )}
             <View style={{ marginVertical: 10 }}>
@@ -120,16 +122,16 @@ export const SignupUI = ({ navigation }) => {
                 style={{ borderRadius: 8 }}
                 onPress={handleSubmit(handleFinish)}
               >
-                <Text style={{ color: "white" }}>Sign up</Text>
+                <Text style={{ color: "white" }}>Зарегистрироваться</Text>
               </Button>
               <Text style={{ marginVertical: 10, textAlign: "center" }}>
-                Already have an account?
+                Уже есть аккаунт?
                 <Text
                   style={{ color: "#0080F0" }}
-                  onPress={() => navigation.navigate("Signin")}
+                  onPress={() => navigation.navigate("Вход")}
                 >
                   {" "}
-                  Sign in
+                  Войти
                 </Text>
               </Text>
             </View>

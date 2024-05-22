@@ -39,7 +39,7 @@ export const MyJobCard = (props) => {
             textColor="#CC6600"
             icon={() => <PenTool width={20} height={20} color={"#CC6600"} />}
           >
-            Edit
+            Изменить
           </Button>
         )}
         {onDelete && (
@@ -54,7 +54,7 @@ export const MyJobCard = (props) => {
             mode="elevated"
             icon={() => <Trash width={20} height={20} color={"crimson"} />}
           >
-            Delete
+            Удалить
           </Button>
         )}
       </Card.Actions>

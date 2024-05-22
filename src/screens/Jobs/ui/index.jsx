@@ -26,7 +26,7 @@ export const JobsScreen = ({ navigation }) => {
   // GET
   const GET = async (newPagination) => {
     const res = await getData(newPagination, setPending, setData);
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
     if (res?.pagination) {
       setPagination({
         pageNumber: res?.pagination?.currentPage,
@@ -49,11 +49,11 @@ export const JobsScreen = ({ navigation }) => {
   // DELETE
   const handleDelete = async (id) => {
     Alert.alert(
-      "Delete",
-      "Are you sure you want to delete?",
+      "Удалить",
+      "Вы уверены что хотите удалить?",
       [
         {
-          text: "Cancel",
+          text: "Отмена",
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
@@ -75,8 +75,8 @@ export const JobsScreen = ({ navigation }) => {
     <Container>
       <SafeAreaView>
         <HeaderTextScreen
-          title="Jobs"
-          subtitle="Here you can see jobs, you created"
+          title="Вакансии"
+          subtitle="Все вакансии которые вы создали"
         />
       </SafeAreaView>
       <FlatList
@@ -113,7 +113,7 @@ export const JobsScreen = ({ navigation }) => {
           marginBottom: 10,
         }}
         color="#fff"
-        label="Create"
+        label="Создать"
         icon={() => <Plus width={20} height={20} color={"white"} />}
         onPress={() =>
           navigation.navigate("JobScreenCrud", { id: null, refetch })

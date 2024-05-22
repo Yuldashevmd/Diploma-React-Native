@@ -36,7 +36,7 @@ export const SettingScreen = ({ route, navigation }) => {
       refetch(true);
       navigation.goBack();
     }
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
   };
 
   // LOAD
@@ -58,8 +58,8 @@ export const SettingScreen = ({ route, navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           <HeaderTextScreen
-            title="Personal data"
-            subtitle="Save to change personal data"
+            title="Персональные данные"
+            subtitle="Пожалуйста, введите свои персональные данные"
           />
           <View style={{ gap: 20, marginBottom: 20 }}>
             <Surface
@@ -67,7 +67,7 @@ export const SettingScreen = ({ route, navigation }) => {
               style={{ padding: 8, borderRadius: 8, gap: 15 }}
             >
               <Text style={{ fontSize: 20, fontWeight: 600, color: "#454545" }}>
-                Info:
+                Информация:
               </Text>
               <View>
                 <Controller
@@ -77,7 +77,7 @@ export const SettingScreen = ({ route, navigation }) => {
                     <TextInput
                       outlineColor="lightgrey"
                       mode="outlined"
-                      label={"Full name"}
+                      label={"ФИО"}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
@@ -86,7 +86,7 @@ export const SettingScreen = ({ route, navigation }) => {
                   name="name"
                 />
                 {errors.name && (
-                  <Text style={{ color: "red" }}>Name is required</Text>
+                  <Text style={{ color: "red" }}>ФИО не может быть пустым</Text>
                 )}
               </View>
               <View>
@@ -96,7 +96,7 @@ export const SettingScreen = ({ route, navigation }) => {
                     <TextInput
                       outlineColor="lightgrey"
                       mode="outlined"
-                      label={"Email"}
+                      label={"Почта"}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
@@ -106,29 +106,8 @@ export const SettingScreen = ({ route, navigation }) => {
                   rules={{ required: true }}
                 />
                 {errors.email && (
-                  <Text style={{ color: "red" }}>Email is not valid</Text>
-                )}
-              </View>
-              <View>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      outlineColor="lightgrey"
-                      mode="outlined"
-                      keyboardType={"phone-pad"}
-                      label={"Phone"}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                    />
-                  )}
-                  name="phone"
-                  rules={{ required: true, minLength: 11, maxLength: 14 }}
-                />
-                {errors.phone && (
                   <Text style={{ color: "red" }}>
-                    Phone number is not valid, min 11, max 14
+                    Почта не может быть пустым
                   </Text>
                 )}
               </View>
@@ -139,7 +118,30 @@ export const SettingScreen = ({ route, navigation }) => {
                     <TextInput
                       outlineColor="lightgrey"
                       mode="outlined"
-                      label={"Occupation"}
+                      keyboardType={"phone-pad"}
+                      label={"Телефон"}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="phone"
+                  rules={{ required: true, minLength: 11, maxLength: 14 }}
+                />
+                {errors.phone && (
+                  <Text style={{ color: "red" }}>
+                    Номер телефона не может быть короче 11 или длиннее 14
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      outlineColor="lightgrey"
+                      mode="outlined"
+                      label={"Профессия"}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
@@ -149,7 +151,9 @@ export const SettingScreen = ({ route, navigation }) => {
                   rules={{ required: true }}
                 />
                 {errors.occupation && (
-                  <Text style={{ color: "red" }}>Occupation is required</Text>
+                  <Text style={{ color: "red" }}>
+                    Профессия не может быть пустой
+                  </Text>
                 )}
               </View>
             </Surface>
@@ -159,7 +163,7 @@ export const SettingScreen = ({ route, navigation }) => {
               style={{ padding: 8, borderRadius: 8, gap: 15 }}
             >
               <Text style={{ fontSize: 20, fontWeight: 600, color: "#454545" }}>
-                Password:
+                Пароль:
               </Text>
               <View>
                 <Controller
@@ -169,7 +173,7 @@ export const SettingScreen = ({ route, navigation }) => {
                       secureTextEntry
                       outlineColor="lightgrey"
                       mode="outlined"
-                      label={"New password"}
+                      label={"Новый пароль"}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
@@ -179,7 +183,9 @@ export const SettingScreen = ({ route, navigation }) => {
                   rules={{ required: true, minLength: 3, maxLength: 24 }}
                 />
                 {errors.password && (
-                  <Text style={{ color: "red" }}>Password must be 3-24</Text>
+                  <Text style={{ color: "red" }}>
+                    Пароль не может быть короче 3 или длиннее 24
+                  </Text>
                 )}
               </View>
             </Surface>
@@ -196,7 +202,7 @@ export const SettingScreen = ({ route, navigation }) => {
             borderRadius: 8,
           }}
         >
-          Save
+          Сохранить
         </Button>
       </KeyboardAvoidingView>
     </Container>

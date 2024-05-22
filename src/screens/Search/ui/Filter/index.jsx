@@ -53,7 +53,7 @@ export const SearchScreenFilter = () => {
         >
           <Searchbar
             searchAccessibilityLabel="Search"
-            placeholder="Search"
+            placeholder="Поиск"
             onIconPress={handleFinish}
             onKeyPress={(e) => e.key === "Enter" && handleFinish()}
             onChangeText={setSearchValue}
@@ -80,7 +80,7 @@ export const SearchScreenFilter = () => {
           </Button>
         </View>
         {/* MODAL */}
-        <SearchScreenFilterModal open={isOpen} close={close} title={"Filter"} />
+        <SearchScreenFilterModal open={isOpen} close={close} title={"Фильтр"} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

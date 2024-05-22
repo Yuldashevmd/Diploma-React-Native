@@ -39,7 +39,7 @@ export const SigninUI = ({ navigation }) => {
       setToken(res.token);
       await AsyncStorage.setItem("access_token", res.token);
       setTimeout(() => {
-        navigation.navigate("Search");
+        navigation.navigate("Поиск");
       }, 1000);
       reset();
       setLoading(false);
@@ -68,19 +68,19 @@ export const SigninUI = ({ navigation }) => {
                 marginVertical: 10,
               }}
             >
-              <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign in</Text>
+              <Text style={{ fontSize: 22, fontWeight: "bold" }}>Войти</Text>
               <LogIn width={35} height={35} color={"crimson"} />
             </View>
             {error && (
               <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
             )}
-            <Text style={style.label}>Login:</Text>
+            <Text style={style.label}>Логин:</Text>
             <Controller
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={style.input}
-                  placeholder="Enter login or phone number"
+                  placeholder="Введите логин"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -91,16 +91,16 @@ export const SigninUI = ({ navigation }) => {
             />
             {errors.login && (
               <Text style={{ color: "red" }}>
-                Login must be filled, min 3 chars
+                Логин должен содержать не менее 3 символов
               </Text>
             )}
-            <Text style={style.label}>Password:</Text>
+            <Text style={style.label}>Пароль:</Text>
             <Controller
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   style={style.input}
-                  placeholder="Enter password"
+                  placeholder="Введите пароль"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -112,7 +112,7 @@ export const SigninUI = ({ navigation }) => {
             />
             {errors.password && (
               <Text style={{ color: "red" }}>
-                Password must be between 3 and 12
+                Пароль должен содержать не менее 3 и не более 12 символов
               </Text>
             )}
             <View style={{ marginVertical: 10 }}>
@@ -124,16 +124,16 @@ export const SigninUI = ({ navigation }) => {
                 style={{ borderRadius: 8, textAlign: "center" }}
                 onPress={handleSubmit(handleFinish)}
               >
-                <Text style={{ color: "white" }}>Sign in</Text>
+                <Text style={{ color: "white" }}>Войти</Text>
               </Button>
               <Text style={{ marginVertical: 10, textAlign: "center" }}>
-                Don't have an account?
+                Еще нет аккаунта?
                 <Text
                   style={{ color: "#0080F0" }}
-                  onPress={() => navigation.navigate("Signup")}
+                  onPress={() => navigation.navigate("Регистрация")}
                 >
                   {" "}
-                  Sign up
+                  Зарегистрироваться
                 </Text>
               </Text>
             </View>

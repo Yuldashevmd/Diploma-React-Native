@@ -19,13 +19,13 @@ export const ProfileScreen = ({ navigation }) => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem("access_token");
     setToken(null);
-    navigation.navigate("Search");
+    navigation.navigate("Поиск");
   };
 
   // GET
   const GET = async () => {
     const res = await getData(setData, setPending);
-    if (res?.status === 401) navigation.navigate("Signin");
+    if (res?.status === 401) navigation.navigate("Вход");
   };
 
   // REFETCH
@@ -122,7 +122,7 @@ export const ProfileScreen = ({ navigation }) => {
         >
           <View aria-label="profile-resume-part" style={{ marginVertical: 10 }}>
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
-              Resumes:
+              Резюме:
             </Text>
             {data && data?.resumes[0] && (
               <View key={data?.resumes[0].id}>
@@ -138,8 +138,8 @@ export const ProfileScreen = ({ navigation }) => {
               </View>
             )}
             {data?.resumes?.length > 0 ? (
-              <Button onPress={() => navigation.navigate("CV")}>
-                Show all
+              <Button onPress={() => navigation.navigate("Резюме")}>
+                Посмотреть все
               </Button>
             ) : (
               <>
@@ -151,7 +151,7 @@ export const ProfileScreen = ({ navigation }) => {
                     marginVertical: 10,
                   }}
                 >
-                  No CV's found!
+                  Пока нет резюме!
                 </Text>
                 <Button
                   onPress={() =>
@@ -161,7 +161,7 @@ export const ProfileScreen = ({ navigation }) => {
                   buttonColor="#c44d1d"
                   textColor="white"
                 >
-                  Create CV
+                  Создать резюме
                 </Button>
               </>
             )}
@@ -169,7 +169,7 @@ export const ProfileScreen = ({ navigation }) => {
           <Divider />
           <View aria-label="profile-resume-part" style={{ marginVertical: 10 }}>
             <Text style={{ fontSize: 16, fontWeight: "400", color: "grey" }}>
-              Jobs:
+              Вакансии:
             </Text>
             {data && data?.my_jobs[0] && (
               <View key={data?.my_jobs[0].id}>
@@ -186,8 +186,8 @@ export const ProfileScreen = ({ navigation }) => {
             )}
 
             {data?.my_jobs?.length > 0 ? (
-              <Button onPress={() => navigation.navigate("Jobs")}>
-                Show all
+              <Button onPress={() => navigation.navigate("Вакансии")}>
+                Показать все
               </Button>
             ) : (
               <>
@@ -199,7 +199,7 @@ export const ProfileScreen = ({ navigation }) => {
                     marginVertical: 10,
                   }}
                 >
-                  No Jobs found!
+                  Вакансии не найдены!
                 </Text>
                 <Button
                   onPress={() =>
@@ -209,7 +209,7 @@ export const ProfileScreen = ({ navigation }) => {
                   buttonColor="#c44d1d"
                   textColor="white"
                 >
-                  Create Job
+                  Создать вакансию
                 </Button>
               </>
             )}
@@ -227,25 +227,25 @@ export const ProfileScreen = ({ navigation }) => {
               <List.Subheader
                 style={{ fontWeight: "600", fontSize: 16, color: "grey" }}
               >
-                Additional:
+                Дополнительно:
               </List.Subheader>
               <List.Item
-                title="Setting"
+                title="Настройки"
                 left={(props) => <List.Icon {...props} icon="cog" />}
-                onPress={() => navigation.navigate("Settings", { refetch })}
+                onPress={() => navigation.navigate("Настройки", { refetch })}
               />
               <List.Item
-                title="About"
+                title="Справка"
                 left={(props) => <List.Icon {...props} icon="information" />}
-                onPress={() => navigation.navigate("About")}
+                onPress={() => navigation.navigate("Справка")}
               />
               <List.Item
-                title="Help"
+                title="Помощь"
                 left={(props) => <List.Icon {...props} icon={"help"} />}
-                onPress={() => navigation.navigate("Help")}
+                onPress={() => navigation.navigate("Помощь")}
               />
               <List.Item
-                title="Exit"
+                title="Выйти"
                 titleStyle={{ color: "red" }}
                 left={(props) => (
                   <List.Icon {...props} icon={"logout"} color="red" />

@@ -22,7 +22,7 @@ export const CvCard = (props) => {
       />
       <Card.Content>
         <List.Item
-          title="Skills:"
+          title="Навыки:"
           titleStyle={{ fontSize: 16, fontWeight: "500", color: "#000" }}
           descriptionStyle={{ color: "grey", fontSize: 12 }}
           descriptionEllipsizeMode="tail"
@@ -30,7 +30,7 @@ export const CvCard = (props) => {
           description={skills}
         />
         <List.Item
-          title="Experience:"
+          title="Опыт:"
           titleStyle={{ fontSize: 16, fontWeight: "500", color: "#000" }}
           descriptionStyle={{ color: "grey", fontSize: 12 }}
           descriptionEllipsizeMode="tail"
@@ -38,7 +38,7 @@ export const CvCard = (props) => {
           description={jobs}
         />
         <List.Item
-          title="About:"
+          title="Описание:"
           titleStyle={{ fontSize: 16, fontWeight: "500", color: "#000" }}
           descriptionStyle={{ color: "grey", fontSize: 12 }}
           descriptionEllipsizeMode="tail"
@@ -60,7 +60,7 @@ export const CvCard = (props) => {
             textColor="#CC6600"
             icon={() => <PenTool width={20} height={20} color={"#CC6600"} />}
           >
-            Edit
+            Изменить
           </Button>
         )}
         {onDelete && (
@@ -75,7 +75,7 @@ export const CvCard = (props) => {
             mode="default"
             icon={() => <Trash width={20} height={20} color={"crimson"} />}
           >
-            Delete
+            Удалить
           </Button>
         )}
       </Card.Actions>

@@ -17,7 +17,7 @@ const buttons = [
   {
     id: 1,
     value: "all",
-    label: "All",
+    label: "Все",
     icon: List,
     accessibilityLabel: "All",
     style: { borderColor: "lightgrey", backgroundColor: "#fff" },
@@ -27,7 +27,7 @@ const buttons = [
   {
     id: 2,
     value: "offer",
-    label: "Offer",
+    label: "Одобрено",
     accessibilityLabel: "Offered",
     style: { borderColor: "lightgrey", backgroundColor: "#fff" },
     checkedColor: "crimson",
@@ -36,7 +36,7 @@ const buttons = [
   {
     id: 3,
     value: "rejected",
-    label: "Rejected",
+    label: "Отклонено",
     accessibilityLabel: "Rejected",
     style: { borderColor: "lightgrey", backgroundColor: "#fff" },
     checkedColor: "crimson",
@@ -60,7 +60,7 @@ export const ResponseScreen = ({ navigation }) => {
   // GET
   const GET = async (newPagination) => {
     const res = await getData(type, newPagination, setPending, setData);
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
 
     if (res?.pagination) {
       setPagination({
@@ -81,10 +81,7 @@ export const ResponseScreen = ({ navigation }) => {
   return (
     <Container>
       <SafeAreaView>
-        <HeaderTextScreen
-          title="Responses"
-          subtitle="Here you can see responses to jobs"
-        />
+        <HeaderTextScreen title="Отклики" subtitle="Все отклики" />
         <View style={{ marginVertical: 10 }}>
           <SegmentedButtons
             value={type}

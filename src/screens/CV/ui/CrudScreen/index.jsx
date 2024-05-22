@@ -84,7 +84,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
               color: "#252525",
             }}
           >
-            Main info:
+            {id ? "Редактирование резюме" : "Создание резюме"}
           </Text>
           <View style={{ gap: 15 }}>
             <View>
@@ -98,7 +98,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     outlineColor={"#ccc"}
                     activeOutlineColor="#004C99"
                     mode="outlined"
-                    label="Title"
+                    label="Титул"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -111,7 +111,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  title is required and must be at least 3 characters
+                  Титул обязательно и должно быть не меньше 3
                 </Text>
               )}
             </View>
@@ -127,7 +127,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     activeOutlineColor="#004C99"
                     mode="outlined"
                     multiline
-                    label="Skills"
+                    label="Навыки"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -140,7 +140,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  skills is required and must be at least 3 characters
+                  Навыки обязательны и должны быть не меньше 3
                 </Text>
               )}
             </View>
@@ -156,7 +156,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     activeOutlineColor="#004C99"
                     mode="outlined"
                     multiline
-                    label="Experience"
+                    label="Опыт"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -169,7 +169,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  experinces is required
+                  Опыт обязательно
                 </Text>
               )}
             </View>
@@ -189,7 +189,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     activeOutlineColor="#004C99"
                     mode="outlined"
                     multiline
-                    label="Salary from"
+                    label="Цена от"
                     keyboardType="numeric"
                     value={value}
                     onChangeText={onChange}
@@ -203,7 +203,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  salary is required and must be number
+                  Цена должна быть числом
                 </Text>
               )}
             </View>
@@ -220,28 +220,28 @@ export const CVScreenCrud = ({ navigation, route }) => {
                   color: "#252525",
                 }}
               >
-                Salary type:
+                Ценность:
               </Text>
               <Chip
                 selected={salaryType === "sum"}
                 showSelectedOverlay
                 onPress={() => setSalaryType("sum")}
               >
-                Sum
+                Сум
               </Chip>
               <Chip
                 selected={salaryType === "euro"}
                 showSelectedOverlay
                 onPress={() => setSalaryType("euro")}
               >
-                Euro
+                Евро
               </Chip>
               <Chip
                 selected={salaryType === "dollar"}
                 showSelectedOverlay
                 onPress={() => setSalaryType("dollar")}
               >
-                Dollar
+                Доллар
               </Chip>
             </View>
             <View>
@@ -256,7 +256,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     activeOutlineColor="#004C99"
                     mode="outlined"
                     multiline
-                    label="About me"
+                    label="Подробное описание"
                     numberOfLines={10}
                     value={value}
                     onChangeText={onChange}
@@ -270,7 +270,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  about is required
+                  Описание обязательно
                 </Text>
               )}
             </View>
@@ -290,7 +290,7 @@ export const CVScreenCrud = ({ navigation, route }) => {
               borderRadius: 8,
             }}
           >
-            Save
+            Сохранить
           </Button>
         </SafeAreaView>
       </KeyboardAvoidingView>

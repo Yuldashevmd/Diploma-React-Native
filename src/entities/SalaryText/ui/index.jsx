@@ -11,7 +11,7 @@ export const SalaryText = ({ salary = "0", salary_type = "sum" }) => {
         paddingTop: 5,
       }}
     >
-      Salary:{" "}
+      Цена:{" "}
       <Text
         style={{
           fontWeight: "bold",

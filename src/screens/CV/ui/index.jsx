@@ -18,7 +18,7 @@ export const CV = ({ navigation }) => {
   // GET
   const GET = async (newPagination) => {
     const res = await getData(newPagination, setPending, setData);
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
     if (res?.pagination) {
       setPagination({
         pageNumber: res?.pagination?.currentPage,
@@ -40,11 +40,11 @@ export const CV = ({ navigation }) => {
   // DELETE
   const handleDelete = async (id) => {
     Alert.alert(
-      "Delete",
-      "Are you sure you want to delete?",
+      "Удалить",
+      "Вы уверены что хотите удалить?",
       [
         {
-          text: "Cancel",
+          text: "Отмена",
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
@@ -62,7 +62,10 @@ export const CV = ({ navigation }) => {
 
   return (
     <Container>
-      <HeaderTextScreen title="CV's" subtitle="Here you can see your CV's" />
+      <HeaderTextScreen
+        title="Резюме"
+        subtitle="Сдесь вы можете увидеть все ваши резюме"
+      />
       {pending ? (
         <LoadingUI />
       ) : (
@@ -102,7 +105,7 @@ export const CV = ({ navigation }) => {
             marginBottom: 10,
           }}
           color="#fff"
-          label="Create"
+          label="Создать"
           icon={() => <Plus width={20} height={20} color={"white"} />}
           onPress={() =>
             navigation.navigate("CVScreenCrud", { id: null, refetch })

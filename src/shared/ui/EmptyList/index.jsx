@@ -18,7 +18,7 @@ export const ListEmpty = () => {
           color: "crimson",
         }}
       >
-        Ooops! No items found...
+        Упс, ничего не найдено!
       </Text>
     </View>
   );

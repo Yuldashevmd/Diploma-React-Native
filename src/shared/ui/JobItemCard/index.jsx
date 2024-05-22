@@ -57,7 +57,7 @@ export const JobItemCard = (props) => {
               marginBottom: 5,
             }}
           >
-            REJECTED
+            ОТКЛОНЕНО
           </Text>
         )}
         {offered && (
@@ -70,7 +70,7 @@ export const JobItemCard = (props) => {
               marginBottom: 5,
             }}
           >
-            OFFERED
+            ОДОБРЕНО
           </Text>
         )}
         {!rejected && !offered && (
@@ -81,7 +81,7 @@ export const JobItemCard = (props) => {
             textColor={offered ? "green" : "crimson"}
             buttonColor={!offered ? "#F8CECC" : "#D5E8D4"}
           >
-            {offered ? "Apply" : "Read more"}
+            {offered ? "Откликнуться" : "Подробнее"}
           </Button>
         )}
       </Card.Actions>

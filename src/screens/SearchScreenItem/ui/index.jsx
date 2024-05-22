@@ -18,13 +18,13 @@ export const SearchScreenItem = ({ navigation, route }) => {
   // GET
   const GET = async () => {
     const res = await getData(id, setPending, setData);
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
   };
 
   // LIKE
   const onLike = async () => {
     if (!token) {
-      navigation.navigate("Signin");
+      navigation.navigate("Вход");
     } else {
       const body = {
         like: data?.likes?.like ? false : true,
@@ -32,7 +32,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
       };
       setLoading(true);
       const res = await handleLike(body);
-      res.status === 401 && navigation.navigate("Signin");
+      res.status === 401 && navigation.navigate("Вход");
       res.status === 201 && GET();
       setLoading(false);
     }
@@ -62,11 +62,11 @@ export const SearchScreenItem = ({ navigation, route }) => {
   // SEND RESPONSE
   const handleSendResponse = async () => {
     if (!token) {
-      navigation.navigate("Signin");
+      navigation.navigate("Вход");
     } else {
       setLoading(true);
       const res = await postResponse(data.id);
-      res.status === 401 && navigation.navigate("Signin");
+      res.status === 401 && navigation.navigate("Вход");
       res.status === 201 && GET();
       setLoading(false);
     }
@@ -110,7 +110,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             buttonColor="#E1D5E7"
             textColor="#9673A6"
           >
-            {data?.seen} people seen
+            {data?.seen} просмотр
           </Button>
           <Button
             style={{ borderRadius: 8 }}
@@ -118,31 +118,31 @@ export const SearchScreenItem = ({ navigation, route }) => {
             buttonColor="#F8CECC"
             textColor="crimson"
           >
-            {data?.rejects} people rejected
+            {data?.rejects} откликнулся
           </Button>
         </View>
         <View aria-label="company" style={{ marginVertical: 10, gap: 5 }}>
-          <Text style={{ fontWeight: "600", fontSize: 18 }}>Company:</Text>
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>Компания:</Text>
           <Text style={style.text}>{data?.org_name}</Text>
         </View>
         <View aria-label="expriece" style={{ marginVertical: 10, gap: 5 }}>
-          <Text style={{ fontWeight: "600", fontSize: 18 }}>Experience:</Text>
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>Опыт:</Text>
           <Text style={style.text}>{data?.expriece}</Text>
         </View>
         <View aria-label="requirements" style={{ marginVertical: 10, gap: 8 }}>
-          <Text style={{ fontWeight: "600", fontSize: 18 }}>Requirements:</Text>
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>Требования:</Text>
           <Text>{data?.requrements}</Text>
         </View>
         <View aria-label="content" style={{ marginVertical: 10, gap: 5 }}>
-          <Text style={{ fontWeight: "600", fontSize: 18 }}>Content:</Text>
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>Описание:</Text>
           <Text style={style.text}>{data?.about}</Text>
         </View>
         <View aria-label="address" style={{ marginVertical: 10, gap: 5 }}>
-          <Text style={{ fontWeight: "600", fontSize: 18 }}>Address:</Text>
+          <Text style={{ fontWeight: "600", fontSize: 18 }}>Адрес:</Text>
           <Text style={style.text}>{data?.address}</Text>
         </View>
         <View aria-label="contacts" style={{ marginVertical: 10, gap: 5 }}>
-          <Text style={style.title}>Contacts:</Text>
+          <Text style={style.title}>Контакты:</Text>
           <View
             style={{
               flexDirection: "row",
@@ -151,7 +151,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Phone width={20} height={20} color="#252525" />
-            <Text style={style.text}>Phone: {data?.phone}</Text>
+            <Text style={style.text}>Телефон: {data?.phone}</Text>
           </View>
           <View
             style={{
@@ -161,7 +161,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Mail width={20} height={20} color="#252525" />
-            <Text style={style.text}>Email: {data?.email}</Text>
+            <Text style={style.text}>Почта: {data?.email}</Text>
           </View>
           <View
             style={{
@@ -171,7 +171,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
             }}
           >
             <Send width={20} height={20} color="#252525" />
-            <Text style={style.text}>Telegram: {data?.telegram}</Text>
+            <Text style={style.text}>Телеграм: {data?.telegram}</Text>
           </View>
         </View>
       </ScrollView>
@@ -191,7 +191,7 @@ export const SearchScreenItem = ({ navigation, route }) => {
           justifyContent: "center",
         }}
       >
-        Response
+        Откликнутся
       </Button>
     </Container>
   );

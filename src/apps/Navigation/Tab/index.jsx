@@ -18,7 +18,7 @@ export const TabNavigator = () => {
   return (
     <Tab.Navigator initialRouteName="Search">
       <Tab.Screen
-        name="Search"
+        name="Поиск"
         component={SearchScreen}
         options={{
           headerShown: false,
@@ -34,7 +34,7 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Saved"
+        name="Сохраненные"
         component={SavedScreen}
         options={{
           headerShown: false,
@@ -51,7 +51,7 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Response"
+        name="Отклики"
         component={ResponseScreen}
         options={{
           headerShown: false,
@@ -68,7 +68,7 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Jobs"
+        name="Вакансии"
         component={JobsScreen}
         options={{
           headerShown: false,
@@ -85,7 +85,7 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="Профиль"
         component={ProfileScreen}
         options={{
           headerShown: false,

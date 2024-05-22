@@ -25,7 +25,7 @@ export const StackNavigator = () => {
         name="JobScreenCrud"
         component={JobsScreenCrud}
         options={{
-          title: "Create or Edit Job",
+          title: "Создать или редактировать",
           headerStyle: { backgroundColor: "crimson" },
           headerTitleStyle: {
             color: "white",
@@ -34,12 +34,12 @@ export const StackNavigator = () => {
           unmountOnBlur: true,
         }}
       />
-      <Stack.Screen name="CV" component={CV} />
+      <Stack.Screen name="Резюме" component={CV} />
       <Stack.Screen
         name="CVScreenCrud"
         component={CVScreenCrud}
         options={{
-          title: "Create or Edit CV",
+          title: "Создать или редактировать",
           headerStyle: { backgroundColor: "#004a8d" },
           headerTitleStyle: {
             color: "white",
@@ -49,24 +49,16 @@ export const StackNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="Settings"
+        name="Настройки"
         component={SettingScreen}
         options={{ unmountOnBlur: true }}
       />
 
       {/* AUTH */}
-      <Stack.Screen
-        name="Signin"
-        component={Signin}
-        // options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Signup"
-        component={Signup}
-        // options={{ headerShown: false }}
-      />
-      <Stack.Screen name="About" component={About} />
-      <Stack.Screen name="Help" component={Help} />
+      <Stack.Screen name="Вход" component={Signin} />
+      <Stack.Screen name="Регистрация" component={Signup} />
+      <Stack.Screen name="Справка" component={About} />
+      <Stack.Screen name="Помощь" component={Help} />
     </Stack.Navigator>
   );
 };

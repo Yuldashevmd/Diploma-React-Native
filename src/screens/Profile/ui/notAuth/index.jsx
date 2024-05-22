@@ -22,10 +22,10 @@ export const NOTAUTH = () => {
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
         <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          Please sign in first!
+          Пожалуйста, авторизуйтесь!
         </Text>
         <Button
-          onPress={() => navigation.navigate("Signin")}
+          onPress={() => navigation.navigate("Вход")}
           buttonColor="crimson"
           textColor="white"
           style={{
@@ -34,7 +34,7 @@ export const NOTAUTH = () => {
             borderRadius: 8,
           }}
         >
-          Go Signin
+          Войти
         </Button>
       </SafeAreaView>
     </Container>

@@ -123,7 +123,7 @@ export const SearchScreenFilterModal = (props) => {
                     onChangeText={onChange}
                     value={value}
                     onBlur={onBlur}
-                    label={"Search"}
+                    label={"Поиск"}
                     mode="outlined"
                     outlineColor="lightgrey"
                     activeOutlineColor="#fb676b"
@@ -139,7 +139,7 @@ export const SearchScreenFilterModal = (props) => {
                   selectedColor="#fb676b"
                   style={{ backgroundColor: "#FFCCCC" }}
                 >
-                  by vacancy name
+                  по вакансии
                 </Chip>
                 <Chip
                   selected={searchBy === "organization_name"}
@@ -148,7 +148,7 @@ export const SearchScreenFilterModal = (props) => {
                   selectedColor="#fb676b"
                   style={{ backgroundColor: "#FFCCCC" }}
                 >
-                  by organization name
+                  по организации
                 </Chip>
               </View>
             </View>
@@ -161,7 +161,7 @@ export const SearchScreenFilterModal = (props) => {
                     onChangeText={onChange}
                     value={value}
                     onBlur={onBlur}
-                    label={"Salary"}
+                    label={"Цена от"}
                     mode="outlined"
                     keyboardType="numeric"
                     outlineColor="lightgrey"
@@ -177,7 +177,7 @@ export const SearchScreenFilterModal = (props) => {
                   selectedColor="#fb676b"
                   style={{ backgroundColor: "#FFCCCC" }}
                 >
-                  sum
+                  сум
                 </Chip>
                 <Chip
                   selected={salaryType === "euro"}
@@ -186,7 +186,7 @@ export const SearchScreenFilterModal = (props) => {
                   selectedColor="#fb676b"
                   style={{ backgroundColor: "#FFCCCC" }}
                 >
-                  euro
+                  Евро
                 </Chip>
                 <Chip
                   selected={salaryType === "dollar"}
@@ -195,7 +195,7 @@ export const SearchScreenFilterModal = (props) => {
                   selectedColor="#fb676b"
                   style={{ backgroundColor: "#FFCCCC" }}
                 >
-                  dollar
+                  доллар
                 </Chip>
               </View>
             </View>
@@ -221,10 +221,10 @@ export const SearchScreenFilterModal = (props) => {
                 justifyContent: "center",
               }}
             >
-              Submit
+              Подтвердить
             </Button>
             <Button icon={"restore"} mode="default" onPress={handleReset}>
-              Restore
+              Сбросить
             </Button>
           </View>
         </Modal>

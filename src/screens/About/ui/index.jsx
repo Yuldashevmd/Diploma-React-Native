@@ -11,12 +11,15 @@ export const About = () => {
       </View>
       <View>
         <Text style={{ fontSize: 18, fontWeight: "600", textAlign: "center" }}>
-          Here is the details about the app
+          Информация о приложении
         </Text>
       </View>
-      <List.Item title="Version: 1.0" description="Created using Native" />
-      <List.Item title="Work-up" description="Name of the app" />
-      <List.Item title="Created by" description="Ubaydulla" />
+      <List.Item
+        title="Версия: 1.0"
+        description="Создано с помощью React Native"
+      />
+      <List.Item title="Work-up" description="Название приложения" />
+      <List.Item title="Создатель" description="Ubaydulla" />
     </Container>
   );
 };

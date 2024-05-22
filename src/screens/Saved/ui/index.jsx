@@ -19,7 +19,7 @@ export const SavedScreen = ({ navigation }) => {
   // GET
   const GET = async (newPagination) => {
     const res = await getData(newPagination, setData, setPending);
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
 
     if (res?.pagination) {
       setPagination({
@@ -41,8 +41,8 @@ export const SavedScreen = ({ navigation }) => {
     <Container>
       <SafeAreaView>
         <HeaderTextScreen
-          title="Saved"
-          subtitle="Here you can see saved jobs"
+          title="Сохраненные вакансии"
+          subtitle="Список сохраненных вакансий"
         />
       </SafeAreaView>
       {pending ? (

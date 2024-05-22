@@ -25,7 +25,7 @@ export const SearchScreen = ({ navigation }) => {
   // GET
   const GET = async (newPagination) => {
     const res = await getData(newPagination, sort, setData, setPending);
-    if (res?.status === 401) return navigation.navigate("Signin");
+    if (res?.status === 401) return navigation.navigate("Вход");
     if (res?.pagination) {
       setPagination({
         pageNumber: res?.pagination?.currentPage,
@@ -57,7 +57,7 @@ export const SearchScreen = ({ navigation }) => {
             }}
             icon={sort.type === "all" ? "check" : null}
           >
-            All
+            Все
           </Button>
           <Button
             mode="contained"
@@ -71,7 +71,7 @@ export const SearchScreen = ({ navigation }) => {
             }}
             icon={sort.type === "popular" ? "check" : null}
           >
-            Popular
+            Популярные
           </Button>
         </View>
       </SafeAreaView>

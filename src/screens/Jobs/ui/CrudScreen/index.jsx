@@ -83,7 +83,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
               color: "#252525",
             }}
           >
-            Info:
+            Информация:
           </Text>
           <View style={{ gap: 15 }}>
             <View>
@@ -97,7 +97,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     outlineColor={"#ccc"}
                     activeOutlineColor="crimson"
                     mode="outlined"
-                    label="Title"
+                    label="Титул"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -110,7 +110,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 3 characters
+                  титул надо указать и не меньше 3
                 </Text>
               )}
             </View>
@@ -125,7 +125,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     outlineColor={"#ccc"}
                     activeOutlineColor="crimson"
                     mode="outlined"
-                    label="Organization name"
+                    label="Название организации"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -138,7 +138,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 3 characters
+                  название организации надо указать и не меньше 3
                 </Text>
               )}
             </View>
@@ -154,7 +154,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     activeOutlineColor="crimson"
                     mode="outlined"
                     multiline
-                    label="Requirements"
+                    label="Требования"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -167,7 +167,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  field is required and must be at least 5 characters
+                  требования надо указать и не меньше 5
                 </Text>
               )}
             </View>
@@ -183,7 +183,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     activeOutlineColor="crimson"
                     mode="outlined"
                     multiline
-                    label="Experience"
+                    label="Опыт"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -196,7 +196,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  experience is required
+                  опыт надо указать
                 </Text>
               )}
             </View>
@@ -211,7 +211,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   activeOutlineColor="crimson"
                   mode="outlined"
                   multiline
-                  label="Salary from"
+                  label="Цена от"
                   keyboardType="numeric"
                   value={value}
                   onChangeText={onChange}
@@ -225,7 +225,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   color: "red",
                 }}
               >
-                salary is required
+                Цена должна быть числом
               </Text>
             )}
             <View
@@ -241,28 +241,28 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   color: "#252525",
                 }}
               >
-                Salary type:
+                Валюта:
               </Text>
               <Chip
                 selected={salaryType === "sum"}
                 showSelectedOverlay
                 onPress={() => setSalaryType("sum")}
               >
-                Sum
+                Сум
               </Chip>
               <Chip
                 selected={salaryType === "euro"}
                 showSelectedOverlay
                 onPress={() => setSalaryType("euro")}
               >
-                Euro
+                Евро
               </Chip>
               <Chip
                 selected={salaryType === "dollar"}
                 showSelectedOverlay
                 onPress={() => setSalaryType("dollar")}
               >
-                Dollar
+                Доллар
               </Chip>
             </View>
             <View
@@ -281,7 +281,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                   color: "#252525",
                 }}
               >
-                Contacts:
+                Контакты:
               </Text>
               <View>
                 <Controller
@@ -294,7 +294,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       outlineColor={"#ccc"}
                       activeOutlineColor="crimson"
                       mode="outlined"
-                      label="Address"
+                      label="Адрес"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -307,7 +307,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       color: "red",
                     }}
                   >
-                    address is required
+                    адрес не может быть пустым
                   </Text>
                 )}
               </View>
@@ -323,7 +323,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       activeOutlineColor="crimson"
                       mode="outlined"
                       keyboardType="phone-pad"
-                      label="Phone"
+                      label="Номер телефона"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -336,7 +336,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       color: "red",
                     }}
                   >
-                    phone is required
+                    номер телефона не может быть пустым
                   </Text>
                 )}
               </View>
@@ -351,7 +351,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       outlineColor={"#ccc"}
                       activeOutlineColor="crimson"
                       mode="outlined"
-                      label="Email"
+                      label="Почта"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -364,7 +364,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       color: "red",
                     }}
                   >
-                    email is required
+                    почта не может быть пустым
                   </Text>
                 )}
               </View>
@@ -379,7 +379,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       outlineColor={"#ccc"}
                       activeOutlineColor="crimson"
                       mode="outlined"
-                      label="Telegram"
+                      label="Телеграм"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -392,7 +392,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                       color: "red",
                     }}
                   >
-                    telegram is required
+                    телеграм не может быть пустым
                   </Text>
                 )}
               </View>
@@ -408,7 +408,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     outlineColor={"#ccc"}
                     activeOutlineColor="crimson"
                     mode="outlined"
-                    label="About me"
+                    label="Описание"
                     value={value}
                     multiline
                     numberOfLines={10}
@@ -423,7 +423,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
                     color: "red",
                   }}
                 >
-                  about is required
+                  описание не может быть пустым
                 </Text>
               )}
             </View>
@@ -442,7 +442,7 @@ export const JobsScreenCrud = ({ navigation, route }) => {
             borderRadius: 8,
           }}
         >
-          Save
+          Сохранить
         </Button>
       </KeyboardAvoidingView>
     </Container>

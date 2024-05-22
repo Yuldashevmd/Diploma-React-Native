@@ -30,7 +30,7 @@ export const Pagination = ({ GET, pagination }) => {
         onPress={handlePrev}
         textColor="crimson"
       >
-        Prev
+        Назад
       </Button>
       <Button
         icon="chevron-right"
@@ -38,7 +38,7 @@ export const Pagination = ({ GET, pagination }) => {
         onPress={handleNext}
         textColor="crimson"
       >
-        Next
+        Далее
       </Button>
     </View>
   );
